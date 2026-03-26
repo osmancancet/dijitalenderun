@@ -16,6 +16,10 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  experimental: {
+    optimizePackageImports: ["firebase", "lucide-react", "swiper"],
+  },
+  poweredByHeader: false,
 };
 
 export default withNextIntl(nextConfig);

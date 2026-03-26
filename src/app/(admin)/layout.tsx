@@ -1,16 +1,12 @@
 "use client";
 
-import { useAuth } from "@/contexts/AuthContext";
+import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import AdminSidebar from "@/components/layout/AdminSidebar";
 import LoadingSpinner from "@/components/shared/LoadingSpinner";
 
-export default function AdminLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+function AdminContent({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
   const router = useRouter();
 
@@ -28,7 +24,6 @@ export default function AdminLayout({
     );
   }
 
-  // Giriş sayfası için sidebar gösterme
   if (!user) {
     return <>{children}</>;
   }
@@ -40,5 +35,17 @@ export default function AdminLayout({
         <main className="p-6">{children}</main>
       </div>
     </div>
+  );
+}
+
+export default function AdminLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <AuthProvider>
+      <AdminContent>{children}</AdminContent>
+    </AuthProvider>
   );
 }
