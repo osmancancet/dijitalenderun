@@ -16,9 +16,6 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  experimental: {
-    optimizePackageImports: ["firebase", "lucide-react", "swiper"],
-  },
   poweredByHeader: false,
 };
 
