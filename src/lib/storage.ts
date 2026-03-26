@@ -4,7 +4,7 @@ import {
   getDownloadURL,
   deleteObject,
 } from "firebase/storage";
-import { storage } from "./firebase";
+import { storage } from "./firebase-storage";
 
 export async function uploadFile(
   file: File,
