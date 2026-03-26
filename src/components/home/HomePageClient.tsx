@@ -33,12 +33,19 @@ interface HomeData {
 export default function HomePageClient() {
   const [data, setData] = useState<HomeData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     fetch("/api/public/homepage")
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) throw new Error(`API ${res.status}`);
+        return res.json();
+      })
       .then((d: HomeData) => setData(d))
-      .catch(() => {})
+      .catch((err) => {
+        console.error("Homepage veri hatası:", err);
+        setError(true);
+      })
       .finally(() => setLoading(false));
   }, []);
 
@@ -50,8 +57,30 @@ export default function HomePageClient() {
   const videos = activeVideolar.filter((v) => v.videoType !== "short");
   const shorts = activeVideolar.filter((v) => v.videoType === "short");
 
+  function retry() {
+    setLoading(true);
+    setError(false);
+    fetch("/api/public/homepage")
+      .then((res) => {
+        if (!res.ok) throw new Error(`API ${res.status}`);
+        return res.json();
+      })
+      .then((d: HomeData) => setData(d))
+      .catch(() => setError(true))
+      .finally(() => setLoading(false));
+  }
+
   return (
     <div className="max-w-7xl mx-auto px-4 py-6">
+      {error && !data && (
+        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-center">
+          <p className="text-sm text-red-600 mb-2">Veriler yüklenirken bir hata oluştu.</p>
+          <button onClick={retry} className="px-4 py-1.5 bg-red-600 text-white rounded-lg text-sm hover:bg-red-700 transition-colors">
+            Tekrar Dene
+          </button>
+        </div>
+      )}
+
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         <div className="lg:col-span-8">
           <HeroSlider slides={slides} loading={loading} />

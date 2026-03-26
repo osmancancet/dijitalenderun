@@ -26,8 +26,8 @@ export async function getDocuments<T extends DocumentData>(
     const q = constraints.length > 0 ? query(ref, ...constraints) : query(ref);
     const snapshot = await getDocs(q);
     return snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as T & { id: string }));
-  } catch {
-    console.error(`Firestore okuma hatası: ${collectionName}`);
+  } catch (err) {
+    console.error(`Firestore okuma hatası [${collectionName}]:`, err);
     return [];
   }
 }
@@ -41,8 +41,8 @@ export async function getDocument<T extends DocumentData>(
     const snapshot = await getDoc(ref);
     if (!snapshot.exists()) return null;
     return { id: snapshot.id, ...snapshot.data() } as T & { id: string };
-  } catch {
-    console.error(`Firestore doc okuma hatası: ${collectionName}/${docId}`);
+  } catch (err) {
+    console.error(`Firestore doc okuma hatası [${collectionName}/${docId}]:`, err);
     return null;
   }
 }

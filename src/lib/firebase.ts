@@ -11,6 +11,10 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || "",
 };
 
+if (!firebaseConfig.projectId) {
+  console.error("[Firebase] NEXT_PUBLIC_FIREBASE_PROJECT_ID is empty — env vars may not be set");
+}
+
 let firebaseApp: FirebaseApp;
 let firestoreDb: Firestore;
 let firebaseStorage: FirebaseStorage;
