@@ -1,8 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { orderBy } from "firebase/firestore";
-import { useCollection } from "@/hooks/useCollection";
 import { useTranslations } from "next-intl";
 import type { ResmiGazeteItem } from "@/types";
 import { Newspaper, ExternalLink, Calendar, RefreshCw, FileText } from "lucide-react";
@@ -18,10 +16,16 @@ interface GazeteFihristItem {
 
 export default function ResmiGazetePage() {
   const t = useTranslations("resmiGazete");
-  const { items: allItems, loading } = useCollection<ResmiGazeteItem>(
-    "resmiGazete",
-    [orderBy("createdAt", "desc")]
-  );
+  const [allItems, setAllItems] = useState<ResmiGazeteItem[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("/api/public/resmi-gazete")
+      .then((res) => res.json())
+      .then((d) => setAllItems(d.items ?? []))
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, []);
 
   const [dailyItems, setDailyItems] = useState<GazeteFihristItem[]>([]);
   const [dailyDate, setDailyDate] = useState("");

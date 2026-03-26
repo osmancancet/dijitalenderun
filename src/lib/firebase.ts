@@ -1,7 +1,6 @@
 import { initializeApp, getApps, type FirebaseApp } from "firebase/app";
 import { getFirestore, type Firestore } from "firebase/firestore";
 import { getStorage, type FirebaseStorage } from "firebase/storage";
-import { getAuth, type Auth } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "",
@@ -12,36 +11,29 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || "",
 };
 
-let app: FirebaseApp;
-let db: Firestore;
-let storage: FirebaseStorage;
-let auth: Auth;
+let firebaseApp: FirebaseApp;
+let firestoreDb: Firestore;
+let firebaseStorage: FirebaseStorage;
 
 function getApp() {
-  if (!app) {
-    app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
+  if (!firebaseApp) {
+    firebaseApp = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
   }
-  return app;
+  return firebaseApp;
 }
 
 function getDb() {
-  if (!db) db = getFirestore(getApp());
-  return db;
+  if (!firestoreDb) firestoreDb = getFirestore(getApp());
+  return firestoreDb;
 }
 
 function getStorageInstance() {
-  if (!storage) storage = getStorage(getApp());
-  return storage;
-}
-
-function getAuthInstance() {
-  if (!auth) auth = getAuth(getApp());
-  return auth;
+  if (!firebaseStorage) firebaseStorage = getStorage(getApp());
+  return firebaseStorage;
 }
 
 export {
   getApp as app,
   getDb as db,
   getStorageInstance as storage,
-  getAuthInstance as auth,
 };

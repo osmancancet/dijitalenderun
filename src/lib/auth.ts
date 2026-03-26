@@ -4,7 +4,7 @@ import {
   onAuthStateChanged,
   type User,
 } from "firebase/auth";
-import { auth } from "./firebase";
+import { getAuthInstance as auth } from "./firebase-auth";
 
 export async function signIn(email: string, password: string) {
   return signInWithEmailAndPassword(auth(), email, password);

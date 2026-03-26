@@ -1,7 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import { useCollection } from "@/hooks/useCollection";
+import { useState, useEffect } from "react";
 import PageTitle from "@/components/shared/PageTitle";
 import NoteCard from "@/components/content/NoteCard";
 import EmptyState from "@/components/shared/EmptyState";
@@ -9,7 +8,17 @@ import LoadingSpinner from "@/components/shared/LoadingSpinner";
 import type { DersNotu } from "@/types";
 
 export default function MevzuatDersNotlariPage() {
-  const { items, loading } = useCollection<DersNotu>("mevzuatDersNotlari");
+  const [items, setItems] = useState<DersNotu[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("/api/public/ders-notlari?type=mevzuat")
+      .then((res) => res.json())
+      .then((d) => setItems(d.notes ?? []))
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, []);
+
   const notes = items.filter((n) => n.isActive);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
 

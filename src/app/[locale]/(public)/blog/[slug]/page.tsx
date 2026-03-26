@@ -1,8 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { collection, query, where, getDocs } from "firebase/firestore";
-import { db } from "@/lib/firebase";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import DOMPurify from "dompurify";
@@ -27,22 +25,11 @@ export default function BlogDetailPage({
 
   useEffect(() => {
     if (!slug) return;
-    async function fetchPost() {
-      try {
-        const ref = collection(db(), "blog");
-        const q = query(ref, where("slug", "==", slug));
-        const snapshot = await getDocs(q);
-        if (!snapshot.empty) {
-          const doc = snapshot.docs[0];
-          setPost({ id: doc.id, ...doc.data() } as BlogPost);
-        }
-      } catch (err) {
-        console.error("Blog yazısı yüklenemedi:", err);
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchPost();
+    fetch(`/api/public/blog/${slug}`)
+      .then((res) => res.json())
+      .then((d) => setPost(d.post ?? null))
+      .catch(() => {})
+      .finally(() => setLoading(false));
   }, [slug]);
 
   if (loading) return <LoadingSpinner />;
@@ -76,7 +63,7 @@ export default function BlogDetailPage({
         {post.publishedAt && (
           <span className="flex items-center gap-1">
             <Calendar size={14} />
-            {new Date(post.publishedAt.seconds * 1000).toLocaleDateString("tr-TR")}
+            {new Date(((post.publishedAt as unknown as Record<string, number>)._seconds ?? (post.publishedAt as unknown as Record<string, number>).seconds) * 1000).toLocaleDateString("tr-TR")}
           </span>
         )}
         {post.tags.length > 0 && (

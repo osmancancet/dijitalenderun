@@ -1,6 +1,6 @@
 "use client";
 
-import { useCollection } from "@/hooks/useCollection";
+import { useState, useEffect } from "react";
 import { Link } from "@/i18n/navigation";
 import PageTitle from "@/components/shared/PageTitle";
 import EmptyState from "@/components/shared/EmptyState";
@@ -9,7 +9,17 @@ import { Calendar, Tag, ArrowRight } from "lucide-react";
 import type { BlogPost } from "@/types";
 
 export default function BlogPage() {
-  const { items, loading } = useCollection<BlogPost>("blog");
+  const [items, setItems] = useState<BlogPost[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("/api/public/blog")
+      .then((res) => res.json())
+      .then((d) => setItems(d.posts ?? []))
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, []);
+
   const posts = items.filter((p) => p.isPublished);
 
   if (loading) return <LoadingSpinner />;
@@ -39,7 +49,7 @@ export default function BlogPage() {
                   {post.publishedAt && (
                     <span className="flex items-center gap-1">
                       <Calendar size={12} />
-                      {new Date(post.publishedAt.seconds * 1000).toLocaleDateString("tr-TR")}
+                      {new Date(((post.publishedAt as unknown as Record<string, number>)._seconds ?? (post.publishedAt as unknown as Record<string, number>).seconds) * 1000).toLocaleDateString("tr-TR")}
                     </span>
                   )}
                   {post.tags.length > 0 && (

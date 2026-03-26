@@ -38,7 +38,8 @@ export function useCollection<T extends DocumentData>(
     );
 
     return unsubscribe;
-  }, [collectionName]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [collectionName, JSON.stringify(constraints.map((c) => c.type))]);
 
   return { items, loading };
 }

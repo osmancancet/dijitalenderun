@@ -1,10 +1,9 @@
 "use client";
 
-import { orderBy } from "firebase/firestore";
-import { useCollection } from "@/hooks/useCollection";
+import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import type { PersonelIlani } from "@/types";
-import { Briefcase, ExternalLink, Link2 } from "lucide-react";
+import { ExternalLink, Link2 } from "lucide-react";
 import Image from "next/image";
 import PageTitle from "@/components/shared/PageTitle";
 import EmptyState from "@/components/shared/EmptyState";
@@ -13,10 +12,16 @@ import LoadingSpinner from "@/components/shared/LoadingSpinner";
 export default function PersonelIlanlariPage() {
   const t = useTranslations("personelIlanlari");
   const home = useTranslations("home");
-  const { items: allItems, loading } = useCollection<PersonelIlani>(
-    "personelIlanlari",
-    [orderBy("createdAt", "desc")]
-  );
+  const [allItems, setAllItems] = useState<PersonelIlani[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("/api/public/personel-ilanlari")
+      .then((res) => res.json())
+      .then((d) => setAllItems(d.items ?? []))
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, []);
 
   const items = allItems.filter((i) => i.isActive);
 
