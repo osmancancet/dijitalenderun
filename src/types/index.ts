@@ -1,4 +1,10 @@
-import { Timestamp } from "firebase/firestore";
+// Lightweight type — Firebase SDK'yı client bundle'a çekmemek için
+export interface FirestoreTimestamp {
+  seconds: number;
+  nanoseconds: number;
+  _seconds?: number;
+  _nanoseconds?: number;
+}
 
 // ========== Slider ==========
 export interface SliderItem {
@@ -9,8 +15,8 @@ export interface SliderItem {
   linkUrl?: string;
   order: number;
   isActive: boolean;
-  createdAt: Timestamp;
-  updatedAt: Timestamp;
+  createdAt: FirestoreTimestamp;
+  updatedAt: FirestoreTimestamp;
 }
 
 // ========== Resmi Gazete ==========
@@ -18,11 +24,11 @@ export interface ResmiGazeteItem {
   id: string;
   title: string;
   summary: string;
-  date: Timestamp;
+  date: FirestoreTimestamp;
   sourceUrl?: string;
   fileUrl?: string;
   isActive: boolean;
-  createdAt: Timestamp;
+  createdAt: FirestoreTimestamp;
 }
 
 // ========== Personel İlanları ==========
@@ -32,10 +38,10 @@ export interface PersonelIlani {
   institution: string;
   description: string;
   gazeteTarihi?: string;
-  deadline?: Timestamp;
+  deadline?: FirestoreTimestamp;
   sourceUrl?: string;
   isActive: boolean;
-  createdAt: Timestamp;
+  createdAt: FirestoreTimestamp;
 }
 
 // ========== Ders Notları ==========
@@ -50,8 +56,8 @@ export interface DersNotu {
   thumbnailUrl?: string;
   downloadCount: number;
   isActive: boolean;
-  createdAt: Timestamp;
-  updatedAt: Timestamp;
+  createdAt: FirestoreTimestamp;
+  updatedAt: FirestoreTimestamp;
 }
 
 // ========== Blog ==========
@@ -64,9 +70,9 @@ export interface BlogPost {
   coverImageUrl?: string;
   tags: string[];
   isPublished: boolean;
-  publishedAt?: Timestamp;
-  createdAt: Timestamp;
-  updatedAt: Timestamp;
+  publishedAt?: FirestoreTimestamp;
+  createdAt: FirestoreTimestamp;
+  updatedAt: FirestoreTimestamp;
 }
 
 // ========== YouTube Videolar ==========
@@ -80,8 +86,8 @@ export interface VideoItem {
   videoType: VideoType;
   order: number;
   isActive: boolean;
-  createdAt: Timestamp;
-  updatedAt: Timestamp;
+  createdAt: FirestoreTimestamp;
+  updatedAt: FirestoreTimestamp;
 }
 
 // ========== Site Ayarları ==========
@@ -89,7 +95,7 @@ export interface HakkimizdaContent {
   title: string;
   content: string;
   imageUrl?: string;
-  updatedAt: Timestamp;
+  updatedAt: FirestoreTimestamp;
 }
 
 export interface IletisimContent {
@@ -102,7 +108,7 @@ export interface IletisimContent {
     linkedin?: string;
     instagram?: string;
   };
-  updatedAt: Timestamp;
+  updatedAt: FirestoreTimestamp;
 }
 
 export interface ProfileEducation {
@@ -150,7 +156,7 @@ export interface ProfileContent {
   researchAreas: string[];
   courses: ProfileCourse[];
   publications: ProfilePublication[];
-  updatedAt: Timestamp;
+  updatedAt: FirestoreTimestamp;
 }
 
 // ========== İletişim Formu ==========
@@ -161,7 +167,7 @@ export interface ContactMessage {
   subject: string;
   message: string;
   isRead: boolean;
-  createdAt: Timestamp;
+  createdAt: FirestoreTimestamp;
 }
 
 // ========== Genel ==========

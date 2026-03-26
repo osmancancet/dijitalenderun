@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { getDocument } from "@/lib/firestore";
 import { useTranslations } from "next-intl";
 import PageTitle from "@/components/shared/PageTitle";
 import LoadingSpinner from "@/components/shared/LoadingSpinner";
@@ -32,10 +31,11 @@ export default function DrOzanYetkinPage() {
   }
 
   useEffect(() => {
-    getDocument<ProfileContent>("siteSettings", "drOzanYetkin").then((doc) => {
-      setProfile(doc);
-      setLoading(false);
-    });
+    fetch("/api/public/profile")
+      .then((res) => res.json())
+      .then((d) => setProfile(d.profile ?? null))
+      .catch(() => {})
+      .finally(() => setLoading(false));
   }, []);
 
   if (loading) return <div className="max-w-7xl mx-auto px-4 py-8"><LoadingSpinner /></div>;

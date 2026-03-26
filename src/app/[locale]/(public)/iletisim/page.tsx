@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { addDocument } from "@/lib/firestore";
 import PageTitle from "@/components/shared/PageTitle";
 import { Mail, Send, GraduationCap, MessageCircle } from "lucide-react";
 
@@ -16,17 +15,16 @@ export default function IletisimPage() {
     e.preventDefault();
     setSending(true);
     try {
-      await addDocument("contactMessages", {
-        name: form.name,
-        email: form.email,
-        subject: form.subject,
-        message: form.message,
-        isRead: false,
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
       });
+      if (!res.ok) throw new Error("API error");
       setSent(true);
       setForm({ name: "", email: "", subject: "", message: "" });
-    } catch (err) {
-      console.error("Mesaj gönderilemedi:", err);
+    } catch {
+      console.error("Mesaj gönderilemedi");
     } finally {
       setSending(false);
     }

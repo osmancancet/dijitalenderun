@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { addDocument } from "@/lib/firestore";
 
 export async function POST(request: Request) {
   try {
@@ -9,8 +10,14 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Tüm alanlar zorunludur." }, { status: 400 });
     }
 
-    // TODO: Firestore'a kaydet (server-side Firebase Admin gerekir)
-    // Şimdilik sadece başarılı döndür
+    await addDocument("contactMessages", {
+      name,
+      email,
+      subject,
+      message,
+      isRead: false,
+    });
+
     return NextResponse.json({ success: true });
   } catch {
     return NextResponse.json({ error: "Bir hata oluştu." }, { status: 500 });
