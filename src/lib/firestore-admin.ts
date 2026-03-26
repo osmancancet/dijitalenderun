@@ -41,6 +41,38 @@ export async function addDocument(
   return ref.id;
 }
 
+export async function updateDocument(
+  collectionName: string,
+  docId: string,
+  data: Record<string, unknown>
+): Promise<void> {
+  const db = getAdminDb();
+  await db
+    .collection(collectionName)
+    .doc(docId)
+    .update({ ...data, updatedAt: FieldValue.serverTimestamp() });
+}
+
+export async function deleteDocument(
+  collectionName: string,
+  docId: string
+): Promise<void> {
+  const db = getAdminDb();
+  await db.collection(collectionName).doc(docId).delete();
+}
+
+export async function setDocument(
+  collectionName: string,
+  docId: string,
+  data: Record<string, unknown>
+): Promise<void> {
+  const db = getAdminDb();
+  await db
+    .collection(collectionName)
+    .doc(docId)
+    .set({ ...data, updatedAt: FieldValue.serverTimestamp() }, { merge: true });
+}
+
 export async function queryDocuments(
   collectionName: string,
   field: string,

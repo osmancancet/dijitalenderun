@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { getDocument, setDocument } from "@/lib/firestore";
+import { adminGetSettings, adminSaveSettings } from "@/hooks/useAdminCollection";
 import LoadingSpinner from "@/components/shared/LoadingSpinner";
 import { Save } from "lucide-react";
 import type { IletisimContent } from "@/types";
@@ -16,8 +16,9 @@ export default function AdminIletisimPage() {
   const [saved, setSaved] = useState(false);
 
   useEffect(() => {
-    getDocument<IletisimContent>("siteSettings", "iletisim").then((doc) => {
-      if (doc) {
+    adminGetSettings("iletisim").then((raw) => {
+      if (raw) {
+        const doc = raw as unknown as IletisimContent;
         setForm({
           address: doc.address || "", phone: doc.phone || "", email: doc.email || "",
           mapEmbedUrl: doc.mapEmbedUrl || "",
@@ -31,7 +32,7 @@ export default function AdminIletisimPage() {
 
   async function handleSave() {
     setSaving(true);
-    await setDocument("siteSettings", "iletisim", {
+    await adminSaveSettings("iletisim", {
       address: form.address, phone: form.phone, email: form.email,
       mapEmbedUrl: form.mapEmbedUrl,
       socialLinks: { twitter: form.twitter, linkedin: form.linkedin, instagram: form.instagram },

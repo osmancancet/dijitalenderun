@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { getDocument, setDocument } from "@/lib/firestore";
+import { adminGetSettings, adminSaveSettings } from "@/hooks/useAdminCollection";
 import LoadingSpinner from "@/components/shared/LoadingSpinner";
 import ImageUpload from "@/components/admin/ImageUpload";
 import { Save, Plus, X, ChevronDown, ChevronUp } from "lucide-react";
@@ -51,8 +51,9 @@ export default function AdminDrOzanYetkinPage() {
   }
 
   useEffect(() => {
-    getDocument<ProfileContent>("siteSettings", "drOzanYetkin").then((doc) => {
-      if (doc) {
+    adminGetSettings("drOzanYetkin").then((raw) => {
+      if (raw) {
+        const doc = raw as unknown as ProfileContent;
         setForm({
           title: doc.title || "Dr. Öğr. Üyesi Ozan Yetkin",
           subtitle: doc.subtitle || "",
@@ -81,7 +82,7 @@ export default function AdminDrOzanYetkinPage() {
 
   async function handleSave() {
     setSaving(true);
-    await setDocument("siteSettings", "drOzanYetkin", {
+    await adminSaveSettings("drOzanYetkin", {
       ...form,
       languages: form.languages.filter(Boolean),
       memberships: form.memberships.filter(Boolean),

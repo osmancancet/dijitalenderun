@@ -1,17 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { useCollection } from "@/hooks/useCollection";
-import { addDocument, updateDocument, deleteDocument } from "@/lib/firestore";
+import { useAdminCollection, adminAdd, adminUpdate, adminDelete } from "@/hooks/useAdminCollection";
 import LoadingSpinner from "@/components/shared/LoadingSpinner";
 import { Plus, Pencil, Trash2, X, RefreshCw } from "lucide-react";
 import type { ResmiGazeteItem } from "@/types";
-import { getDocuments } from "@/lib/firestore";
 
 const COLLECTION = "resmiGazete";
 
 export default function AdminResmiGazetePage() {
-  const { items, loading } = useCollection<ResmiGazeteItem>(COLLECTION);
+  const { items, loading, refresh } = useAdminCollection<ResmiGazeteItem>(COLLECTION);
   const [editing, setEditing] = useState<ResmiGazeteItem | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({ title: "", summary: "", sourceUrl: "", isActive: true });
@@ -27,13 +25,12 @@ export default function AdminResmiGazetePage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
 
-      const existing = await getDocuments<ResmiGazeteItem>(COLLECTION);
-      const existingTitles = new Set(existing.map((g) => g.title));
+      const existingTitles = new Set(items.map((g) => g.title));
       let added = 0;
 
       for (const item of data.items) {
         if (!existingTitles.has(item.title)) {
-          await addDocument(COLLECTION, {
+          await adminAdd(COLLECTION, {
             title: item.title,
             summary: item.summary,
             sourceUrl: item.sourceUrl,
@@ -43,6 +40,7 @@ export default function AdminResmiGazetePage() {
         }
       }
       setSyncMsg(`${added} yeni kayıt eklendi (${data.count} kayıt bulundu${data.date ? `, ${data.date} tarihli gazete` : ""}).`);
+      refresh();
     } catch (err) {
       console.error(err);
       setSyncMsg("Senkronizasyon başarısız oldu.");
@@ -56,9 +54,8 @@ export default function AdminResmiGazetePage() {
     setSyncing(true);
     setSyncMsg("Mevcut kayıtlar siliniyor...");
     try {
-      const existing = await getDocuments<ResmiGazeteItem>(COLLECTION);
-      for (const item of existing) {
-        await deleteDocument(COLLECTION, item.id);
+      for (const item of items) {
+        await adminDelete(COLLECTION, item.id);
       }
 
       const res = await fetch("/api/resmi-gazete");
@@ -66,7 +63,7 @@ export default function AdminResmiGazetePage() {
       if (!res.ok) throw new Error(data.error);
 
       for (const item of data.items) {
-        await addDocument(COLLECTION, {
+        await adminAdd(COLLECTION, {
           title: item.title,
           summary: item.summary,
           sourceUrl: item.sourceUrl,
@@ -74,6 +71,7 @@ export default function AdminResmiGazetePage() {
         });
       }
       setSyncMsg(`Tamamlandı! ${data.count} kayıt eklendi (${data.date} tarihli gazete).`);
+      refresh();
     } catch (err) {
       console.error(err);
       setSyncMsg("İşlem başarısız oldu.");
@@ -98,11 +96,12 @@ export default function AdminResmiGazetePage() {
     setSaving(true);
     try {
       if (editing) {
-        await updateDocument(COLLECTION, editing.id, form);
+        await adminUpdate(COLLECTION, editing.id, form);
       } else {
-        await addDocument(COLLECTION, form);
+        await adminAdd(COLLECTION, form);
       }
       setShowForm(false);
+      refresh();
     } catch (err) {
       console.error(err);
     } finally {
@@ -112,7 +111,8 @@ export default function AdminResmiGazetePage() {
 
   async function handleDelete(id: string) {
     if (!confirm("Bu kaydı silmek istediğinize emin misiniz?")) return;
-    await deleteDocument(COLLECTION, id);
+    await adminDelete(COLLECTION, id);
+    refresh();
   }
 
   if (loading) return <LoadingSpinner />;

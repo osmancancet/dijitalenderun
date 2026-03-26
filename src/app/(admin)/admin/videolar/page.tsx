@@ -1,8 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useCollection } from "@/hooks/useCollection";
-import { addDocument, updateDocument, deleteDocument, getDocuments } from "@/lib/firestore";
+import { useAdminCollection, adminAdd, adminUpdate, adminDelete } from "@/hooks/useAdminCollection";
 import LoadingSpinner from "@/components/shared/LoadingSpinner";
 import { Plus, Pencil, Trash2, X, Play, RefreshCw, Tv, Zap } from "lucide-react";
 import type { VideoItem } from "@/types";
@@ -19,7 +18,7 @@ function getYoutubeId(url: string): string | null {
 }
 
 export default function AdminVideolarPage() {
-  const { items, loading } = useCollection<VideoItem>(COLLECTION);
+  const { items, loading, refresh } = useAdminCollection<VideoItem>(COLLECTION);
   const [editing, setEditing] = useState<VideoItem | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({ title: "", youtubeUrl: "", description: "", videoType: "video" as "video" | "short", order: 0, isActive: true });
@@ -34,10 +33,9 @@ export default function AdminVideolarPage() {
     setSyncMsg(`${label} siliniyor...`);
     try {
       // 1. Bu türdeki mevcut videoları sil
-      const existing = await getDocuments<VideoItem>(COLLECTION);
-      const toDelete = existing.filter((v) => (v.videoType || "video") === type);
+      const toDelete = items.filter((v) => (v.videoType || "video") === type);
       for (const v of toDelete) {
-        await deleteDocument(COLLECTION, v.id);
+        await adminDelete(COLLECTION, v.id);
       }
 
       // 2. YouTube'dan sadece bu türü çek
@@ -47,10 +45,10 @@ export default function AdminVideolarPage() {
       if (!res.ok) throw new Error(data.error);
 
       // 3. Yenilerini ekle
-      const remaining = existing.filter((v) => (v.videoType || "video") !== type);
+      const remaining = items.filter((v) => (v.videoType || "video") !== type);
       let order = remaining.length + 1;
       for (const video of data.videos) {
-        await addDocument(COLLECTION, {
+        await adminAdd(COLLECTION, {
           title: video.title,
           youtubeUrl: video.youtubeUrl,
           description: video.description,
@@ -60,6 +58,7 @@ export default function AdminVideolarPage() {
         });
       }
       setSyncMsg(`${data.count} ${label.toLowerCase()} eklendi!`);
+      refresh();
     } catch (err) {
       console.error(err);
       setSyncMsg(`${label} çekilirken hata oluştu.`);
@@ -74,11 +73,11 @@ export default function AdminVideolarPage() {
     setSyncing(true);
     setSyncMsg("Tüm videolar siliniyor...");
     try {
-      const existing = await getDocuments<VideoItem>(COLLECTION);
-      for (const v of existing) {
-        await deleteDocument(COLLECTION, v.id);
+      for (const v of items) {
+        await adminDelete(COLLECTION, v.id);
       }
-      setSyncMsg(`${existing.length} video silindi.`);
+      setSyncMsg(`${items.length} video silindi.`);
+      refresh();
     } catch (err) {
       console.error(err);
       setSyncMsg("Silme işlemi başarısız.");
@@ -103,11 +102,12 @@ export default function AdminVideolarPage() {
     setSaving(true);
     try {
       if (editing) {
-        await updateDocument(COLLECTION, editing.id, form);
+        await adminUpdate(COLLECTION, editing.id, form);
       } else {
-        await addDocument(COLLECTION, form);
+        await adminAdd(COLLECTION, form);
       }
       setShowForm(false);
+      refresh();
     } catch (err) {
       console.error(err);
     } finally {
@@ -117,7 +117,8 @@ export default function AdminVideolarPage() {
 
   async function handleDelete(id: string) {
     if (!confirm("Bu videoyu silmek istediğinize emin misiniz?")) return;
-    await deleteDocument(COLLECTION, id);
+    await adminDelete(COLLECTION, id);
+    refresh();
   }
 
   if (loading) return <LoadingSpinner />;

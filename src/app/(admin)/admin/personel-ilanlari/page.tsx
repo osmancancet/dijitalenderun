@@ -1,8 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useCollection } from "@/hooks/useCollection";
-import { addDocument, updateDocument, deleteDocument, Timestamp } from "@/lib/firestore";
+import { useAdminCollection, adminAdd, adminUpdate, adminDelete } from "@/hooks/useAdminCollection";
 import LoadingSpinner from "@/components/shared/LoadingSpinner";
 import { Plus, Pencil, Trash2, X } from "lucide-react";
 import type { PersonelIlani } from "@/types";
@@ -10,7 +9,7 @@ import type { PersonelIlani } from "@/types";
 const COLLECTION = "personelIlanlari";
 
 export default function AdminPersonelIlanlariPage() {
-  const { items, loading } = useCollection<PersonelIlani>(COLLECTION);
+  const { items, loading, refresh } = useAdminCollection<PersonelIlani>(COLLECTION);
   const [editing, setEditing] = useState<PersonelIlani | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({ title: "", institution: "", description: "", gazeteTarihi: "", sourceUrl: "", deadline: "", isActive: true });
@@ -35,14 +34,15 @@ export default function AdminPersonelIlanlariPage() {
       const { deadline, ...rest } = form;
       const saveData: Record<string, unknown> = { ...rest };
       if (deadline) {
-        saveData.deadline = Timestamp.fromDate(new Date(deadline));
+        saveData.deadline = deadline;
       }
       if (editing) {
-        await updateDocument(COLLECTION, editing.id, saveData);
+        await adminUpdate(COLLECTION, editing.id, saveData);
       } else {
-        await addDocument(COLLECTION, saveData);
+        await adminAdd(COLLECTION, saveData);
       }
       setShowForm(false);
+      refresh();
     } catch (err) {
       console.error(err);
     } finally {
@@ -52,7 +52,8 @@ export default function AdminPersonelIlanlariPage() {
 
   async function handleDelete(id: string) {
     if (!confirm("Bu ilanı silmek istediğinize emin misiniz?")) return;
-    await deleteDocument(COLLECTION, id);
+    await adminDelete(COLLECTION, id);
+    refresh();
   }
 
   if (loading) return <LoadingSpinner />;

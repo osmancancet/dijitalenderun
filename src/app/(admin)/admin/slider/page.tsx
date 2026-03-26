@@ -1,8 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useCollection } from "@/hooks/useCollection";
-import { addDocument, updateDocument, deleteDocument } from "@/lib/firestore";
+import { useAdminCollection, adminAdd, adminUpdate, adminDelete } from "@/hooks/useAdminCollection";
 import ImageUpload from "@/components/admin/ImageUpload";
 import LoadingSpinner from "@/components/shared/LoadingSpinner";
 import { Plus, Pencil, Trash2, X } from "lucide-react";
@@ -11,7 +10,7 @@ import type { SliderItem } from "@/types";
 const COLLECTION = "slider";
 
 export default function AdminSliderPage() {
-  const { items, loading } = useCollection<SliderItem>(COLLECTION);
+  const { items, loading, refresh } = useAdminCollection<SliderItem>(COLLECTION);
   const [editing, setEditing] = useState<SliderItem | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({ title: "", description: "", imageUrl: "", linkUrl: "", order: 0, isActive: true });
@@ -33,11 +32,12 @@ export default function AdminSliderPage() {
     setSaving(true);
     try {
       if (editing) {
-        await updateDocument(COLLECTION, editing.id, form);
+        await adminUpdate(COLLECTION, editing.id, form);
       } else {
-        await addDocument(COLLECTION, form);
+        await adminAdd(COLLECTION, form);
       }
       setShowForm(false);
+      refresh();
     } catch (err) {
       console.error(err);
     } finally {
@@ -47,7 +47,8 @@ export default function AdminSliderPage() {
 
   async function handleDelete(id: string) {
     if (!confirm("Bu slaytı silmek istediğinize emin misiniz?")) return;
-    await deleteDocument(COLLECTION, id);
+    await adminDelete(COLLECTION, id);
+    refresh();
   }
 
   if (loading) return <LoadingSpinner />;

@@ -1,8 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useCollection } from "@/hooks/useCollection";
-import { addDocument, updateDocument, deleteDocument } from "@/lib/firestore";
+import { useAdminCollection, adminAdd, adminUpdate, adminDelete } from "@/hooks/useAdminCollection";
 import ImageUpload from "@/components/admin/ImageUpload";
 import LoadingSpinner from "@/components/shared/LoadingSpinner";
 import { Plus, Pencil, Trash2, X } from "lucide-react";
@@ -12,7 +11,7 @@ import type { BlogPost } from "@/types";
 const COLLECTION = "blog";
 
 export default function AdminBlogPage() {
-  const { items, loading } = useCollection<BlogPost>(COLLECTION);
+  const { items, loading, refresh } = useAdminCollection<BlogPost>(COLLECTION);
   const [editing, setEditing] = useState<BlogPost | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({
@@ -48,11 +47,12 @@ export default function AdminBlogPage() {
         isPublished: form.isPublished,
       };
       if (editing) {
-        await updateDocument(COLLECTION, editing.id, data);
+        await adminUpdate(COLLECTION, editing.id, data);
       } else {
-        await addDocument(COLLECTION, data);
+        await adminAdd(COLLECTION, data);
       }
       setShowForm(false);
+      refresh();
     } catch (err) {
       console.error(err);
     } finally {
@@ -62,7 +62,8 @@ export default function AdminBlogPage() {
 
   async function handleDelete(id: string) {
     if (!confirm("Bu yazıyı silmek istediğinize emin misiniz?")) return;
-    await deleteDocument(COLLECTION, id);
+    await adminDelete(COLLECTION, id);
+    refresh();
   }
 
   if (loading) return <LoadingSpinner />;

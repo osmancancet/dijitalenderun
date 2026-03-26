@@ -1,8 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useCollection } from "@/hooks/useCollection";
-import { addDocument, updateDocument, deleteDocument } from "@/lib/firestore";
+import { useAdminCollection, adminAdd, adminUpdate, adminDelete } from "@/hooks/useAdminCollection";
 import FileUpload from "@/components/admin/FileUpload";
 import LoadingSpinner from "@/components/shared/LoadingSpinner";
 import { Plus, Pencil, Trash2, X } from "lucide-react";
@@ -11,7 +10,7 @@ import type { DersNotu } from "@/types";
 const COLLECTION = "mevzuatDersNotlari";
 
 export default function AdminMevzuatDersNotlariPage() {
-  const { items, loading } = useCollection<DersNotu>(COLLECTION);
+  const { items, loading, refresh } = useAdminCollection<DersNotu>(COLLECTION);
   const [editing, setEditing] = useState<DersNotu | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({ title: "", description: "", category: "", fileUrl: "", fileName: "", fileSize: 0, isActive: true });
@@ -34,11 +33,12 @@ export default function AdminMevzuatDersNotlariPage() {
     try {
       const data = { ...form, downloadCount: editing?.downloadCount || 0 };
       if (editing) {
-        await updateDocument(COLLECTION, editing.id, data);
+        await adminUpdate(COLLECTION, editing.id, data);
       } else {
-        await addDocument(COLLECTION, data);
+        await adminAdd(COLLECTION, data);
       }
       setShowForm(false);
+      refresh();
     } catch (err) {
       console.error(err);
     } finally {
@@ -48,7 +48,8 @@ export default function AdminMevzuatDersNotlariPage() {
 
   async function handleDelete(id: string) {
     if (!confirm("Bu notu silmek istediğinize emin misiniz?")) return;
-    await deleteDocument(COLLECTION, id);
+    await adminDelete(COLLECTION, id);
+    refresh();
   }
 
   if (loading) return <LoadingSpinner />;

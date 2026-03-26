@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { getDocument, setDocument } from "@/lib/firestore";
+import { adminGetSettings, adminSaveSettings } from "@/hooks/useAdminCollection";
 import LoadingSpinner from "@/components/shared/LoadingSpinner";
 import ImageUpload from "@/components/admin/ImageUpload";
 import { Save } from "lucide-react";
@@ -14,9 +14,10 @@ export default function AdminHakkimizdaPage() {
   const [saved, setSaved] = useState(false);
 
   useEffect(() => {
-    getDocument<HakkimizdaContent>("siteSettings", "hakkimizda").then((doc) => {
+    adminGetSettings("hakkimizda").then((doc) => {
       if (doc) {
-        setForm({ title: doc.title || "Hakkımızda", content: doc.content || "", imageUrl: doc.imageUrl || "" });
+        const d = doc as unknown as HakkimizdaContent;
+        setForm({ title: d.title || "Hakkımızda", content: d.content || "", imageUrl: d.imageUrl || "" });
       }
       setLoading(false);
     });
@@ -24,7 +25,7 @@ export default function AdminHakkimizdaPage() {
 
   async function handleSave() {
     setSaving(true);
-    await setDocument("siteSettings", "hakkimizda", form);
+    await adminSaveSettings("hakkimizda", form);
     setSaving(false);
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
