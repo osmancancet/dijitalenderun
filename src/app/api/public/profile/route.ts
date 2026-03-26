@@ -1,10 +1,8 @@
 import { NextResponse } from "next/server";
-import { getDocument } from "@/lib/firestore";
-import type { DocumentData } from "firebase/firestore";
+import { getDocument } from "@/lib/firestore-admin";
 
 export async function GET() {
-  const doc = await getDocument<DocumentData>("siteSettings", "drOzanYetkin");
-  const profile = doc ? JSON.parse(JSON.stringify(doc)) : null;
+  const profile = await getDocument("siteSettings", "drOzanYetkin");
   return NextResponse.json(
     { profile },
     { headers: { "Cache-Control": "s-maxage=300, stale-while-revalidate=600" } }
