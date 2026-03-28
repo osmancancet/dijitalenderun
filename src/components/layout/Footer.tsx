@@ -78,6 +78,11 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/sbky-sozluk" className="text-white/60 hover:text-white transition-colors">
+                  {nav("sozluk")}
+                </Link>
+              </li>
+              <li>
                 <Link href="/mevzuat-ders-notlari" className="text-white/60 hover:text-white transition-colors">
                   {nav("mevzuat")}
                 </Link>
@@ -85,11 +90,6 @@ export default function Footer() {
               <li>
                 <Link href="/dr-ozan-yetkin" className="text-white/60 hover:text-white transition-colors">
                   {nav("drOzan")}
-                </Link>
-              </li>
-              <li>
-                <Link href="/blog" className="text-white/60 hover:text-white transition-colors">
-                  {nav("blog")}
                 </Link>
               </li>
               <li>
@@ -124,11 +124,11 @@ export default function Footer() {
               <li>
                 <p className="text-white/40 text-xs mb-1">{t("academicEmail")}</p>
                 <a
-                  href="mailto:ozan.yetkin@dpu.edu.tr"
+                  href="mailto:drozanyetkin@gmail.com"
                   className="flex items-center gap-2 text-white/70 hover:text-white transition-colors"
                 >
                   <Mail size={14} className="shrink-0" />
-                  <span>ozan.yetkin@dpu.edu.tr</span>
+                  <span>drozanyetkin@gmail.com</span>
                 </a>
               </li>
             </ul>

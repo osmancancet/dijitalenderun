@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { updateDocument, deleteDocument } from "@/lib/firestore-admin";
+import { getSupabaseAdmin, toTableName, toSnakeCase } from "@/lib/supabase";
 
 export async function PUT(
   request: NextRequest,
@@ -7,8 +7,21 @@ export async function PUT(
 ) {
   try {
     const { collection, id } = await params;
-    const data = await request.json();
-    await updateDocument(collection, id, data);
+    const table = toTableName(collection);
+    const body = await request.json();
+    const supabase = getSupabaseAdmin();
+
+    const snakeData = toSnakeCase(body);
+    delete snakeData.id;
+    snakeData.updated_at = new Date().toISOString();
+
+    const { error } = await supabase
+      .from(table)
+      .update(snakeData)
+      .eq("id", id);
+
+    if (error) throw error;
+
     return NextResponse.json({ success: true });
   } catch (err) {
     console.error("[admin API] PUT error:", err);
@@ -22,7 +35,16 @@ export async function DELETE(
 ) {
   try {
     const { collection, id } = await params;
-    await deleteDocument(collection, id);
+    const table = toTableName(collection);
+    const supabase = getSupabaseAdmin();
+
+    const { error } = await supabase
+      .from(table)
+      .delete()
+      .eq("id", id);
+
+    if (error) throw error;
+
     return NextResponse.json({ success: true });
   } catch (err) {
     console.error("[admin API] DELETE error:", err);

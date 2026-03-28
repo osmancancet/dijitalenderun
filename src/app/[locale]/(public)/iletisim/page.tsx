@@ -53,7 +53,7 @@ export default function IletisimPage() {
           </a>
 
           <a
-            href="mailto:ozan.yetkin@dpu.edu.tr"
+            href="mailto:drozanyetkin@gmail.com"
             className="block bg-white border border-border rounded-lg p-5 shadow-sm hover:shadow-md hover:border-primary/30 transition-all group"
           >
             <div className="flex items-center gap-3">
@@ -62,7 +62,7 @@ export default function IletisimPage() {
               </div>
               <div>
                 <h3 className="font-semibold text-sm text-foreground">{t("academicEmail")}</h3>
-                <p className="text-sm text-primary">ozan.yetkin@dpu.edu.tr</p>
+                <p className="text-sm text-primary">drozanyetkin@gmail.com</p>
               </div>
             </div>
           </a>

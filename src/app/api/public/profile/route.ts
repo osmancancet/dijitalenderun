@@ -1,10 +1,16 @@
 import { NextResponse } from "next/server";
-import { getDocument } from "@/lib/firestore-admin";
+import { getSupabaseAdmin } from "@/lib/supabase";
 
 export async function GET() {
-  const profile = await getDocument("siteSettings", "drOzanYetkin");
+  const supabase = getSupabaseAdmin();
+  const { data } = await supabase
+    .from("site_settings")
+    .select("data")
+    .eq("id", "drOzanYetkin")
+    .single();
+
   return NextResponse.json(
-    { profile },
+    { profile: data?.data || null },
     { headers: { "Cache-Control": "s-maxage=300, stale-while-revalidate=600" } }
   );
 }

@@ -4,9 +4,9 @@ import { getSupabaseAdmin, toCamelCase } from "@/lib/supabase";
 export async function GET() {
   const supabase = getSupabaseAdmin();
   const { data } = await supabase
-    .from("resmi_gazete")
+    .from("sbky_sozluk")
     .select("*")
-    .order("created_at", { ascending: false });
+    .order("term", { ascending: true });
 
   return NextResponse.json(
     { items: (data || []).map(toCamelCase) },

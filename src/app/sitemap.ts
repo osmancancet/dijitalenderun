@@ -6,11 +6,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const staticPages = [
     "",
     "/sbky-ders-notlari",
+    "/sbky-sozluk",
     "/mevzuat-ders-notlari",
     "/dr-ozan-yetkin",
     "/hakkimizda",
     "/iletisim",
-    "/blog",
     "/resmi-gazete",
     "/personel-ilanlari",
   ];

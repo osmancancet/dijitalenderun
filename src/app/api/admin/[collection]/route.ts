@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { getDocuments, addDocument } from "@/lib/firestore-admin";
+import { getSupabaseAdmin, toTableName, toSnakeCase, toCamelCase } from "@/lib/supabase";
 
 export async function GET(
   _request: NextRequest,
@@ -7,9 +7,17 @@ export async function GET(
 ) {
   try {
     const { collection } = await params;
-    const items = await getDocuments(collection, {
-      orderBy: { field: "createdAt", direction: "desc" },
-    });
+    const table = toTableName(collection);
+    const supabase = getSupabaseAdmin();
+
+    const { data, error } = await supabase
+      .from(table)
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+
+    const items = (data || []).map((row) => toCamelCase(row));
     return NextResponse.json({ items });
   } catch (err) {
     console.error("[admin API] GET error:", err);
@@ -23,9 +31,23 @@ export async function POST(
 ) {
   try {
     const { collection } = await params;
-    const data = await request.json();
-    const id = await addDocument(collection, data);
-    return NextResponse.json({ id });
+    const table = toTableName(collection);
+    const body = await request.json();
+    const supabase = getSupabaseAdmin();
+
+    const snakeData = toSnakeCase(body);
+    // Remove id if present (let DB generate it)
+    delete snakeData.id;
+
+    const { data, error } = await supabase
+      .from(table)
+      .insert(snakeData)
+      .select("id")
+      .single();
+
+    if (error) throw error;
+
+    return NextResponse.json({ id: data.id });
   } catch (err) {
     console.error("[admin API] POST error:", err);
     return NextResponse.json({ error: "Kayıt eklenemedi" }, { status: 500 });

@@ -45,7 +45,7 @@ export default function DrOzanYetkinPage() {
   const faculty = profile?.faculty || "Simav Meslek Yüksekokulu";
   const program = profile?.program || "Yerel Yönetimler";
   const corporateEmail = profile?.corporateEmail || "ozan.yetkin@dpu.edu.tr";
-  const personalEmail = profile?.personalEmail || "ozan.yetkin@dpu.edu.tr";
+  const personalEmail = profile?.personalEmail || "drozanyetkin@gmail.com";
   const phoneNum = profile?.phone || "0 (274) 443 6552";
 
   const education = profile?.education?.length ? profile.education : [

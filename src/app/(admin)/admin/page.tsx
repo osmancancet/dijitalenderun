@@ -6,7 +6,6 @@ import {
   Briefcase,
   BookOpen,
   Scale,
-  FileText,
   Mail,
   Video,
 } from "lucide-react";
@@ -17,8 +16,8 @@ const dashboardCards = [
   { href: "/admin/resmi-gazete", label: "Resmi Gazete", icon: Newspaper, color: "bg-red-600", desc: "Resmi Gazete haberlerini yönetin" },
   { href: "/admin/personel-ilanlari", label: "Personel İlanları", icon: Briefcase, color: "bg-amber-600", desc: "Personel ilanlarını yönetin" },
   { href: "/admin/sbky-ders-notlari", label: "SBKY Ders Notları", icon: BookOpen, color: "bg-green-600", desc: "SBKY ders notlarını yönetin" },
+  { href: "/admin/sbky-sozluk", label: "SBKY Sözlük", icon: BookOpen, color: "bg-cyan-600", desc: "SBKY sözlük terimlerini yönetin" },
   { href: "/admin/mevzuat-ders-notlari", label: "Mevzuat Notları", icon: Scale, color: "bg-purple-600", desc: "Mevzuat notlarını yönetin" },
-  { href: "/admin/blog", label: "Blog & Duyurular", icon: FileText, color: "bg-indigo-600", desc: "Blog yazılarını yönetin" },
   { href: "/admin/videolar", label: "Videolar", icon: Video, color: "bg-rose-600", desc: "YouTube videolarını yönetin" },
   { href: "/admin/iletisim", label: "İletişim Mesajları", icon: Mail, color: "bg-teal-600", desc: "Gelen mesajları görüntüleyin" },
 ];

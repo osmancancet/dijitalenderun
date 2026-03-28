@@ -1,10 +1,15 @@
 import { NextResponse } from "next/server";
-import { getDocuments } from "@/lib/firestore-admin";
+import { getSupabaseAdmin, toCamelCase } from "@/lib/supabase";
 
 export async function GET() {
-  const items = await getDocuments("personelIlanlari", { orderBy: { field: "createdAt", direction: "desc" } });
+  const supabase = getSupabaseAdmin();
+  const { data } = await supabase
+    .from("personel_ilanlari")
+    .select("*")
+    .order("created_at", { ascending: false });
+
   return NextResponse.json(
-    { items },
+    { items: (data || []).map(toCamelCase) },
     { headers: { "Cache-Control": "s-maxage=300, stale-while-revalidate=600" } }
   );
 }

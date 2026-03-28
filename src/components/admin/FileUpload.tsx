@@ -2,7 +2,6 @@
 
 import { useState, useRef } from "react";
 import { Upload, FileText, X } from "lucide-react";
-import { uploadFile, generateFilePath } from "@/lib/storage";
 
 interface FileUploadProps {
   folder: string;
@@ -11,18 +10,30 @@ interface FileUploadProps {
   onChange: (url: string, name: string, size: number) => void;
 }
 
+async function uploadViaApi(file: File, folder: string): Promise<string> {
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("folder", folder);
+  const res = await fetch("/api/admin/upload", { method: "POST", body: formData });
+  if (!res.ok) throw new Error("Upload failed");
+  const data = await res.json();
+  return data.url;
+}
+
 export default function FileUpload({ folder, value, fileName, onChange }: FileUploadProps) {
   const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
 
   async function handleFile(file: File) {
     setUploading(true);
+    setError("");
     try {
-      const path = generateFilePath(folder, file.name);
-      const url = await uploadFile(file, path);
+      const url = await uploadViaApi(file, folder);
       onChange(url, file.name, file.size);
     } catch (err) {
       console.error("Dosya yükleme hatası:", err);
+      setError("Yükleme başarısız oldu. Tekrar deneyin.");
     } finally {
       setUploading(false);
     }
@@ -46,11 +57,16 @@ export default function FileUpload({ folder, value, fileName, onChange }: FileUp
         </div>
       ) : (
         <div
-          onClick={() => inputRef.current?.click()}
-          className="w-full p-4 border-2 border-dashed border-border rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-primary hover:bg-primary-50/50 transition-colors"
+          onClick={() => !uploading && inputRef.current?.click()}
+          className={`w-full p-4 border-2 border-dashed rounded-lg flex flex-col items-center justify-center transition-colors ${
+            uploading ? "border-primary/50 bg-primary-50/30" : "border-border cursor-pointer hover:border-primary hover:bg-primary-50/50"
+          }`}
         >
           {uploading ? (
-            <div className="w-8 h-8 border-4 border-primary/30 border-t-primary rounded-full animate-spin" />
+            <div className="text-center">
+              <div className="w-8 h-8 border-4 border-primary/30 border-t-primary rounded-full animate-spin mx-auto mb-2" />
+              <span className="text-xs text-gray-500">Yükleniyor...</span>
+            </div>
           ) : (
             <>
               <Upload size={24} className="text-gray-300 mb-2" />
@@ -58,6 +74,9 @@ export default function FileUpload({ folder, value, fileName, onChange }: FileUp
             </>
           )}
         </div>
+      )}
+      {error && (
+        <p className="text-xs text-red-500 mt-1.5">{error}</p>
       )}
       <input
         ref={inputRef}
@@ -67,6 +86,7 @@ export default function FileUpload({ folder, value, fileName, onChange }: FileUp
         onChange={(e) => {
           const file = e.target.files?.[0];
           if (file) handleFile(file);
+          e.target.value = "";
         }}
       />
     </div>

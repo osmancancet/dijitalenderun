@@ -3,8 +3,8 @@
     "home": "Home",
     "sbky": "SBKY Lecture Notes",
     "mevzuat": "Legislation Notes",
+    "sozluk": "SBKY Dictionary",
     "drOzan": "Dr. Ozan Yetkin",
-    "blog": "Blog",
     "about": "About Us",
     "contact": "Contact"
   },
@@ -37,16 +37,6 @@
     "downloads": "downloads",
     "noResults": "No notes found matching your search.",
     "fileSize": "File size"
-  },
-  "blog": {
-    "title": "Blog & Announcements",
-    "readMore": "Read More",
-    "noPosts": "No blog posts published yet.",
-    "tags": "Tags",
-    "share": "Share",
-    "publishedAt": "Published",
-    "backToList": "Back to Blog",
-    "notFound": "Blog post not found."
   },
   "about": {
     "title": "About Us",

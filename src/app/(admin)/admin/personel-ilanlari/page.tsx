@@ -23,7 +23,7 @@ export default function AdminPersonelIlanlariPage() {
 
   function openEdit(item: PersonelIlani) {
     setEditing(item);
-    const deadlineStr = item.deadline ? new Date(item.deadline.seconds * 1000).toISOString().split("T")[0] : "";
+    const deadlineStr = item.deadline ? new Date(item.deadline).toISOString().split("T")[0] : "";
     setForm({ title: item.title, institution: item.institution, description: item.description, gazeteTarihi: item.gazeteTarihi || "", sourceUrl: item.sourceUrl || "", deadline: deadlineStr, isActive: item.isActive });
     setShowForm(true);
   }

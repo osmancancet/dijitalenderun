@@ -84,7 +84,7 @@ export default function AdminSliderPage() {
               </div>
               <div>
                 <label className="block text-sm font-medium mb-1">Görsel</label>
-                <ImageUpload folder="slider" value={form.imageUrl} onChange={(url) => setForm({ ...form, imageUrl: url })} />
+                <ImageUpload folder="slider" value={form.imageUrl} onChange={(url) => setForm({ ...form, imageUrl: url })} maxWidth={1920} maxHeight={560} recommendedText="Önerilen boyut: 1920 x 560 piksel" />
               </div>
               <div>
                 <label className="block text-sm font-medium mb-1">Bağlantı URL (opsiyonel)</label>

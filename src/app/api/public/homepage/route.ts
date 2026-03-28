@@ -1,21 +1,28 @@
 import { NextResponse } from "next/server";
-import { getDocuments } from "@/lib/firestore-admin";
+import { getSupabaseAdmin, toCamelCase } from "@/lib/supabase";
 
 export async function GET() {
   try {
-    const [slider, resmiGazete, personelIlanlari, videolar] = await Promise.all([
-      getDocuments("slider", { orderBy: { field: "order", direction: "asc" }, limit: 10 }),
-      getDocuments("resmiGazete", { orderBy: { field: "createdAt", direction: "desc" }, limit: 5 }),
-      getDocuments("personelIlanlari", { orderBy: { field: "createdAt", direction: "desc" }, limit: 10 }),
-      getDocuments("videolar", { orderBy: { field: "order", direction: "asc" }, limit: 12 }),
+    const supabase = getSupabaseAdmin();
+
+    const [sliderRes, gazetteRes, ilanlariRes, videolarRes] = await Promise.all([
+      supabase.from("slider").select("*").order("order", { ascending: true }).limit(10),
+      supabase.from("resmi_gazete").select("*").order("created_at", { ascending: false }).limit(5),
+      supabase.from("personel_ilanlari").select("*").order("created_at", { ascending: false }).limit(10),
+      supabase.from("videolar").select("*").order("order", { ascending: true }).limit(12),
     ]);
 
     return NextResponse.json(
-      { slider, resmiGazete, personelIlanlari, videolar },
+      {
+        slider: (sliderRes.data || []).map(toCamelCase),
+        resmiGazete: (gazetteRes.data || []).map(toCamelCase),
+        personelIlanlari: (ilanlariRes.data || []).map(toCamelCase),
+        videolar: (videolarRes.data || []).map(toCamelCase),
+      },
       { headers: { "Cache-Control": "s-maxage=300, stale-while-revalidate=600" } }
     );
   } catch (err) {
-    console.error("[homepage API] Firebase error:", err);
+    console.error("[homepage API] error:", err);
     return NextResponse.json(
       { error: "Veri yüklenemedi", slider: [], resmiGazete: [], personelIlanlari: [], videolar: [] },
       { status: 500 }

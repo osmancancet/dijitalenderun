@@ -31,7 +31,6 @@ export default function HeroSlider({ slides, loading }: HeroSliderProps) {
       <div className="w-full h-[400px] lg:h-[560px] rounded-lg overflow-hidden relative flex items-center justify-center"
         style={{ background: "linear-gradient(135deg, #8B0000 0%, #4A0000 50%, #2D0000 100%)" }}
       >
-        {/* Pattern overlay */}
         <div className="absolute inset-0 opacity-10"
           style={{
             backgroundImage: `radial-gradient(circle at 25% 25%, white 1px, transparent 1px), radial-gradient(circle at 75% 75%, white 1px, transparent 1px)`,
@@ -65,24 +64,28 @@ export default function HeroSlider({ slides, loading }: HeroSliderProps) {
       loop={slides.length > 1}
       className="w-full h-full rounded-lg overflow-hidden"
     >
-      {slides.map((slide) => (
+      {slides.map((slide, index) => (
         <SwiperSlide key={slide.id}>
-          <div
-            className="relative w-full h-[400px] lg:h-[560px] flex items-center justify-center"
-            style={{
-              background: slide.imageUrl
-                ? `url(${slide.imageUrl}) center/cover no-repeat`
-                : "linear-gradient(135deg, #8B0000 0%, #4A0000 50%, #2D0000 100%)",
-            }}
-          >
-            {/* Pattern overlay for gradient slides */}
-            {!slide.imageUrl && (
-              <div className="absolute inset-0 opacity-10"
-                style={{
-                  backgroundImage: `radial-gradient(circle at 25% 25%, white 1px, transparent 1px), radial-gradient(circle at 75% 75%, white 1px, transparent 1px)`,
-                  backgroundSize: "40px 40px",
-                }}
+          <div className="relative w-full h-[400px] lg:h-[560px] flex items-center justify-center">
+            {slide.imageUrl ? (
+              <Image
+                src={slide.imageUrl}
+                alt={slide.title}
+                fill
+                style={{ objectFit: "cover" }}
+                sizes="100vw"
+                priority={index === 0}
               />
+            ) : (
+              <>
+                <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, #8B0000 0%, #4A0000 50%, #2D0000 100%)" }} />
+                <div className="absolute inset-0 opacity-10"
+                  style={{
+                    backgroundImage: `radial-gradient(circle at 25% 25%, white 1px, transparent 1px), radial-gradient(circle at 75% 75%, white 1px, transparent 1px)`,
+                    backgroundSize: "40px 40px",
+                  }}
+                />
+              </>
             )}
             {/* Dark overlay */}
             <div className="absolute inset-0 bg-black/30" />

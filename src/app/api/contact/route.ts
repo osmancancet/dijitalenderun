@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { addDocument } from "@/lib/firestore-admin";
+import { getSupabaseAdmin } from "@/lib/supabase";
 
 export async function POST(request: Request) {
   try {
@@ -10,13 +10,12 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Tüm alanlar zorunludur." }, { status: 400 });
     }
 
-    await addDocument("contactMessages", {
-      name,
-      email,
-      subject,
-      message,
-      isRead: false,
-    });
+    const supabase = getSupabaseAdmin();
+    const { error } = await supabase
+      .from("contact_messages")
+      .insert({ name, email, subject, message, is_read: false });
+
+    if (error) throw error;
 
     return NextResponse.json({ success: true });
   } catch {

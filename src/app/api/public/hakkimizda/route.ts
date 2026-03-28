@@ -1,15 +1,16 @@
 import { NextResponse } from "next/server";
-import { getSupabaseAdmin, toCamelCase } from "@/lib/supabase";
+import { getSupabaseAdmin } from "@/lib/supabase";
 
 export async function GET() {
   const supabase = getSupabaseAdmin();
   const { data } = await supabase
-    .from("resmi_gazete")
-    .select("*")
-    .order("created_at", { ascending: false });
+    .from("site_settings")
+    .select("data")
+    .eq("id", "hakkimizda")
+    .single();
 
   return NextResponse.json(
-    { items: (data || []).map(toCamelCase) },
+    { data: data?.data || null },
     { headers: { "Cache-Control": "s-maxage=300, stale-while-revalidate=600" } }
   );
 }

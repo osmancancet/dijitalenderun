@@ -1,11 +1,3 @@
-// Lightweight type — Firebase SDK'yı client bundle'a çekmemek için
-export interface FirestoreTimestamp {
-  seconds: number;
-  nanoseconds: number;
-  _seconds?: number;
-  _nanoseconds?: number;
-}
-
 // ========== Slider ==========
 export interface SliderItem {
   id: string;
@@ -15,8 +7,8 @@ export interface SliderItem {
   linkUrl?: string;
   order: number;
   isActive: boolean;
-  createdAt: FirestoreTimestamp;
-  updatedAt: FirestoreTimestamp;
+  createdAt: string;
+  updatedAt: string;
 }
 
 // ========== Resmi Gazete ==========
@@ -24,11 +16,11 @@ export interface ResmiGazeteItem {
   id: string;
   title: string;
   summary: string;
-  date: FirestoreTimestamp;
+  date: string;
   sourceUrl?: string;
   fileUrl?: string;
   isActive: boolean;
-  createdAt: FirestoreTimestamp;
+  createdAt: string;
 }
 
 // ========== Personel İlanları ==========
@@ -38,41 +30,41 @@ export interface PersonelIlani {
   institution: string;
   description: string;
   gazeteTarihi?: string;
-  deadline?: FirestoreTimestamp;
+  deadline?: string;
   sourceUrl?: string;
   isActive: boolean;
-  createdAt: FirestoreTimestamp;
+  createdAt: string;
 }
 
 // ========== Ders Notları ==========
+export type NoteType = "file" | "text" | "both";
+
 export interface DersNotu {
   id: string;
   title: string;
   description: string;
   category: string;
-  fileUrl: string;
-  fileName: string;
-  fileSize: number;
+  noteType?: NoteType;
+  content?: string;
+  fileUrl?: string;
+  fileName?: string;
+  fileSize?: number;
   thumbnailUrl?: string;
   downloadCount: number;
   isActive: boolean;
-  createdAt: FirestoreTimestamp;
-  updatedAt: FirestoreTimestamp;
+  createdAt: string;
+  updatedAt: string;
 }
 
-// ========== Blog ==========
-export interface BlogPost {
+// ========== SBKY Sözlük ==========
+export interface SozlukItem {
   id: string;
-  title: string;
-  slug: string;
-  content: string;
-  excerpt: string;
-  coverImageUrl?: string;
-  tags: string[];
-  isPublished: boolean;
-  publishedAt?: FirestoreTimestamp;
-  createdAt: FirestoreTimestamp;
-  updatedAt: FirestoreTimestamp;
+  term: string;
+  definition: string;
+  category?: string;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
 }
 
 // ========== YouTube Videolar ==========
@@ -86,8 +78,8 @@ export interface VideoItem {
   videoType: VideoType;
   order: number;
   isActive: boolean;
-  createdAt: FirestoreTimestamp;
-  updatedAt: FirestoreTimestamp;
+  createdAt: string;
+  updatedAt: string;
 }
 
 // ========== Site Ayarları ==========
@@ -95,7 +87,7 @@ export interface HakkimizdaContent {
   title: string;
   content: string;
   imageUrl?: string;
-  updatedAt: FirestoreTimestamp;
+  updatedAt: string;
 }
 
 export interface IletisimContent {
@@ -108,7 +100,7 @@ export interface IletisimContent {
     linkedin?: string;
     instagram?: string;
   };
-  updatedAt: FirestoreTimestamp;
+  updatedAt: string;
 }
 
 export interface ProfileEducation {
@@ -156,7 +148,7 @@ export interface ProfileContent {
   researchAreas: string[];
   courses: ProfileCourse[];
   publications: ProfilePublication[];
-  updatedAt: FirestoreTimestamp;
+  updatedAt: string;
 }
 
 // ========== İletişim Formu ==========
@@ -167,7 +159,7 @@ export interface ContactMessage {
   subject: string;
   message: string;
   isRead: boolean;
-  createdAt: FirestoreTimestamp;
+  createdAt: string;
 }
 
 // ========== Genel ==========
@@ -177,7 +169,7 @@ export type CollectionName =
   | "personelIlanlari"
   | "sbkyDersNotlari"
   | "mevzuatDersNotlari"
-  | "blog"
+  | "sbkySozluk"
   | "videolar"
   | "siteSettings"
   | "contactMessages";

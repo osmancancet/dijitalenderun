@@ -14,9 +14,9 @@ export default function Header() {
   const navLinks = [
     { href: "/" as const, label: t("home") },
     { href: "/sbky-ders-notlari" as const, label: t("sbky") },
+    { href: "/sbky-sozluk" as const, label: t("sozluk") },
     { href: "/mevzuat-ders-notlari" as const, label: t("mevzuat") },
     { href: "/dr-ozan-yetkin" as const, label: t("drOzan") },
-    { href: "/blog" as const, label: t("blog") },
     { href: "/hakkimizda" as const, label: t("about") },
     { href: "/iletisim" as const, label: t("contact") },
   ];

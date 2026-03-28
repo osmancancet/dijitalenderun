@@ -52,8 +52,8 @@ export default function AdminHakkimizdaPage() {
           <input type="text" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} className="w-full px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/30" />
         </div>
         <div>
-          <label className="block text-sm font-medium mb-1">İçerik (HTML)</label>
-          <textarea rows={15} value={form.content} onChange={(e) => setForm({ ...form, content: e.target.value })} className="w-full px-3 py-2 border border-border rounded-lg text-sm font-mono focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none" />
+          <label className="block text-sm font-medium mb-1">İçerik</label>
+          <textarea rows={15} value={form.content} onChange={(e) => setForm({ ...form, content: e.target.value })} className="w-full px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 resize-y" placeholder="Hakkımızda sayfası içeriğini buraya yazın..." />
         </div>
         <div>
           <label className="block text-sm font-medium mb-1">Görsel (opsiyonel)</label>

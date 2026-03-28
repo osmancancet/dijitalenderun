@@ -3,8 +3,8 @@
     "home": "Ana Sayfa",
     "sbky": "SBKY Ders Notları",
     "mevzuat": "Mevzuat Ders Notları",
+    "sozluk": "SBKY Sözlük",
     "drOzan": "Dr. Ozan Yetkin",
-    "blog": "Blog",
     "about": "Hakkımızda",
     "contact": "İletişim"
   },
@@ -37,16 +37,6 @@
     "downloads": "indirme",
     "noResults": "Aramanızla eşleşen not bulunamadı.",
     "fileSize": "Dosya boyutu"
-  },
-  "blog": {
-    "title": "Blog & Duyurular",
-    "readMore": "Devamını Oku",
-    "noPosts": "Henüz blog yazısı yayınlanmamış.",
-    "tags": "Etiketler",
-    "share": "Paylaş",
-    "publishedAt": "Yayınlanma",
-    "backToList": "Blog'a Dön",
-    "notFound": "Blog yazısı bulunamadı."
   },
   "about": {
     "title": "Hakkımızda",

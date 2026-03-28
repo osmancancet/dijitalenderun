@@ -1,21 +1,26 @@
-import {
-  signInWithEmailAndPassword,
-  signOut as firebaseSignOut,
-  onAuthStateChanged,
-  type User,
-} from "firebase/auth";
-import { getAuthInstance as auth } from "./firebase-auth";
+import { getSupabaseClient } from "./supabase";
+import type { User } from "@supabase/supabase-js";
+
+export type { User };
 
 export async function signIn(email: string, password: string) {
-  return signInWithEmailAndPassword(auth(), email, password);
+  const supabase = getSupabaseClient();
+  const { error } = await supabase.auth.signInWithPassword({ email, password });
+  if (error) throw error;
 }
 
 export async function signOut() {
-  return firebaseSignOut(auth());
+  const supabase = getSupabaseClient();
+  await supabase.auth.signOut();
 }
 
 export function onAuthChange(callback: (user: User | null) => void) {
-  return onAuthStateChanged(auth(), callback);
+  const supabase = getSupabaseClient();
+  const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    callback(session?.user ?? null);
+  });
+  supabase.auth.getUser().then(({ data }) => {
+    callback(data.user ?? null);
+  });
+  return () => subscription.unsubscribe();
 }
-
-export { type User };
