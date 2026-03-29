@@ -25,8 +25,8 @@ export default function SideAdBanner({ side }: { side: "left" | "right" }) {
       rel="noopener noreferrer"
       className="block w-[140px] rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all hover:scale-[1.03] bg-gradient-to-b from-primary-dark via-primary to-primary-dark"
     >
-      <div className="py-10 px-3 text-center flex flex-col items-center gap-5">
-        <div className="w-10 h-10 rounded-full bg-white/15 flex items-center justify-center">
+      <div className="py-16 px-3 text-center flex flex-col items-center gap-8">
+        <div className="w-12 h-12 rounded-full bg-white/15 flex items-center justify-center">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-white/80">
             <rect x="3" y="3" width="18" height="18" rx="2" />
             <path d="M3 9h18M9 21V9" />
@@ -36,7 +36,7 @@ export default function SideAdBanner({ side }: { side: "left" | "right" }) {
           <p className="text-white/90 text-[10px] font-bold uppercase tracking-widest">Reklam</p>
           <p className="text-white/90 text-[10px] font-bold uppercase tracking-widest">Alanı</p>
         </div>
-        <div className="w-8 h-px bg-white/30" />
+        <div className="w-10 h-px bg-white/30" />
         <p className="text-white/50 text-[9px] leading-relaxed px-1">
           Bu alanda reklam vererek platformumuza destek olabilirsiniz
         </p>
@@ -54,7 +54,7 @@ export default function SideAdBanner({ side }: { side: "left" | "right" }) {
           <Image src={ad.imageUrl} alt={ad.title} width={140} height={500} className="w-full h-auto object-cover" />
         </div>
       ) : (
-        <div className="w-[140px] h-[450px] bg-gradient-to-b from-primary-dark via-primary to-primary-dark rounded-xl flex items-center justify-center shadow-lg">
+        <div className="w-[140px] h-[550px] bg-gradient-to-b from-primary-dark via-primary to-primary-dark rounded-xl flex items-center justify-center shadow-lg">
           <span className="text-white text-xs font-bold text-center px-3">{ad.title}</span>
         </div>
       )}
