@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import * as cheerio from "cheerio";
 
-export const maxDuration = 15;
+export const maxDuration = 60;
 
 const UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
 
@@ -9,7 +9,7 @@ export async function GET() {
   try {
     // Ana sayfayı çek — fihrist zaten burada mevcut
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 10000);
+    const timeout = setTimeout(() => controller.abort(), 30000);
 
     let res: Response;
     try {
@@ -20,7 +20,7 @@ export async function GET() {
     } catch (fetchErr) {
       clearTimeout(timeout);
       const msg = fetchErr instanceof Error && fetchErr.name === "AbortError"
-        ? "Resmi Gazete sitesine bağlanırken zaman aşımı oluştu (10s)"
+        ? "Resmi Gazete sitesine bağlanırken zaman aşımı oluştu (30s)"
         : `Resmi Gazete sitesine bağlanılamadı: ${fetchErr instanceof Error ? fetchErr.message : String(fetchErr)}`;
       return NextResponse.json({ error: msg }, { status: 502 });
     } finally {

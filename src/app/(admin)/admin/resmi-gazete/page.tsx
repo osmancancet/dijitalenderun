@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { useAdminCollection, adminAdd } from "@/hooks/useAdminCollection";
+import { useAdminCollection, adminAdd, adminDelete } from "@/hooks/useAdminCollection";
 import LoadingSpinner from "@/components/shared/LoadingSpinner";
-import { RefreshCw } from "lucide-react";
+import { RefreshCw, Trash2 } from "lucide-react";
 import type { ResmiGazeteItem } from "@/types";
 
 const COLLECTION = "resmiGazete";
@@ -46,6 +46,12 @@ export default function AdminResmiGazetePage() {
     }
   }
 
+  async function handleDelete(id: string) {
+    if (!confirm("Bu kaydı silmek istediğinize emin misiniz?")) return;
+    await adminDelete(COLLECTION, id);
+    refresh();
+  }
+
   if (loading) return <LoadingSpinner />;
 
   return (
@@ -72,16 +78,22 @@ export default function AdminResmiGazetePage() {
             <tr>
               <th className="px-4 py-3 font-medium">Başlık</th>
               <th className="px-4 py-3 font-medium">Kategori</th>
+              <th className="px-4 py-3 font-medium text-right">Sil</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
             {items.length === 0 ? (
-              <tr><td colSpan={2} className="px-4 py-8 text-center text-gray-400">Henüz kayıt eklenmemiş. Senkronize Et butonuna tıklayın.</td></tr>
+              <tr><td colSpan={3} className="px-4 py-8 text-center text-gray-400">Henüz kayıt eklenmemiş. Senkronize Et butonuna tıklayın.</td></tr>
             ) : (
               items.map((item) => (
                 <tr key={item.id} className="hover:bg-muted/50">
                   <td className="px-4 py-3 font-medium">{item.title}</td>
                   <td className="px-4 py-3 text-gray-500">{item.summary}</td>
+                  <td className="px-4 py-3 text-right">
+                    <button onClick={() => handleDelete(item.id)} className="text-red-500 hover:text-red-700">
+                      <Trash2 size={16} />
+                    </button>
+                  </td>
                 </tr>
               ))
             )}
