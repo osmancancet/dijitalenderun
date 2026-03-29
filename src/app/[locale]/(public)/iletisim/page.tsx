@@ -38,7 +38,7 @@ export default function IletisimPage() {
         {/* E-posta Bilgileri */}
         <div className="space-y-4">
           <a
-            href="mailto:iletisim.dijitalenderun@gmail.com"
+            href="https://mail.google.com/mail/?view=cm&to=iletisim.dijitalenderun@gmail.com" target="_blank" rel="noopener noreferrer"
             className="block bg-white border border-border rounded-lg p-5 shadow-sm hover:shadow-md hover:border-primary/30 transition-all group"
           >
             <div className="flex items-center gap-3">
@@ -53,7 +53,7 @@ export default function IletisimPage() {
           </a>
 
           <a
-            href="mailto:drozanyetkin@gmail.com"
+            href="https://mail.google.com/mail/?view=cm&to=drozanyetkin@gmail.com" target="_blank" rel="noopener noreferrer"
             className="block bg-white border border-border rounded-lg p-5 shadow-sm hover:shadow-md hover:border-primary/30 transition-all group"
           >
             <div className="flex items-center gap-3">

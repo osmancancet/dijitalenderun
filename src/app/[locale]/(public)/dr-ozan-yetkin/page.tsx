@@ -153,7 +153,7 @@ export default function DrOzanYetkinPage() {
                   <Mail size={15} className="text-primary shrink-0" />
                   <div>
                     <p className="text-[10px] text-gray-400 uppercase">Kurumsal</p>
-                    <a href={`mailto:${corporateEmail}`} className="hover:text-primary transition-colors">{corporateEmail}</a>
+                    <a href={`https://mail.google.com/mail/?view=cm&to=${corporateEmail}`} target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">{corporateEmail}</a>
                   </div>
                 </div>
                 {personalEmail && personalEmail !== corporateEmail && (
@@ -161,7 +161,7 @@ export default function DrOzanYetkinPage() {
                     <Mail size={15} className="text-primary shrink-0" />
                     <div>
                       <p className="text-[10px] text-gray-400 uppercase">Kişisel</p>
-                      <a href={`mailto:${personalEmail}`} className="hover:text-primary transition-colors">{personalEmail}</a>
+                      <a href={`https://mail.google.com/mail/?view=cm&to=${personalEmail}`} target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">{personalEmail}</a>
                     </div>
                   </div>
                 )}

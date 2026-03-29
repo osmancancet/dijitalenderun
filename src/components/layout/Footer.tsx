@@ -114,7 +114,7 @@ export default function Footer() {
               <li>
                 <p className="text-white/40 text-xs mb-1">{t("generalEmail")}</p>
                 <a
-                  href="mailto:iletisim.dijitalenderun@gmail.com"
+                  href="https://mail.google.com/mail/?view=cm&to=iletisim.dijitalenderun@gmail.com" target="_blank" rel="noopener noreferrer"
                   className="flex items-center gap-2 text-white/70 hover:text-white transition-colors"
                 >
                   <Mail size={14} className="shrink-0" />
@@ -124,7 +124,7 @@ export default function Footer() {
               <li>
                 <p className="text-white/40 text-xs mb-1">{t("academicEmail")}</p>
                 <a
-                  href="mailto:drozanyetkin@gmail.com"
+                  href="https://mail.google.com/mail/?view=cm&to=drozanyetkin@gmail.com" target="_blank" rel="noopener noreferrer"
                   className="flex items-center gap-2 text-white/70 hover:text-white transition-colors"
                 >
                   <Mail size={14} className="shrink-0" />
