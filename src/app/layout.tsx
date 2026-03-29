@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   icons: {
-    icon: "/images/favicon.svg",
-    apple: "/images/logo-renkli.png",
+    icon: "/images/favicon.png",
+    apple: "/images/favicon.png",
   },
   title: {
     default: "Dijital Enderun",
