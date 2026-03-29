@@ -27,6 +27,7 @@ const TABLE_MAP: Record<string, string> = {
   contactMessages: "contact_messages",
   sinavTakvimi: "sinav_takvimi",
   biyografiler: "biyografiler",
+  reklamlar: "reklamlar",
 };
 
 export function toTableName(collection: string): string {

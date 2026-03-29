@@ -163,6 +163,17 @@ export interface ContactMessage {
   createdAt: string;
 }
 
+// ========== Reklamlar ==========
+export interface Reklam {
+  id: string;
+  title: string;
+  imageUrl?: string;
+  linkUrl: string;
+  position: "left" | "right" | "both";
+  isActive: boolean;
+  createdAt: string;
+}
+
 // ========== Biyografi ==========
 export interface Biyografi {
   id: string;
@@ -200,4 +211,5 @@ export type CollectionName =
   | "siteSettings"
   | "contactMessages"
   | "sinavTakvimi"
-  | "biyografiler";
+  | "biyografiler"
+  | "reklamlar";

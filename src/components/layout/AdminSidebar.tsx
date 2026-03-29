@@ -35,6 +35,7 @@ const sidebarLinks = [
   { href: "/admin/videolar", label: "Videolar", icon: Video },
   { href: "/admin/biyografiler", label: "Biyografiler", icon: User },
   { href: "/admin/dr-ozan-yetkin", label: "Dr. Ozan Yetkin", icon: User },
+  { href: "/admin/reklamlar", label: "Reklamlar", icon: Images },
   { href: "/admin/hakkimizda", label: "Hakkımızda", icon: Info },
   { href: "/admin/iletisim", label: "İletişim", icon: Phone },
 ];
