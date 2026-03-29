@@ -129,6 +129,33 @@ body {
   border-color: var(--border);
 }
 
+.dark .text-gray-700 { color: #ccc !important; }
+.dark .text-gray-800 { color: #ddd !important; }
+
+.dark .rich-content,
+.dark .rich-content p,
+.dark .rich-content li,
+.dark .rich-content blockquote {
+  color: #ccc !important;
+}
+
+.dark .rich-content h1,
+.dark .rich-content h2,
+.dark .rich-content h3 {
+  color: #e5e5e5 !important;
+}
+
+.dark .rich-content a {
+  color: var(--primary-light) !important;
+}
+
+.dark .prose,
+.dark .whitespace-pre-wrap,
+.dark .whitespace-pre-line,
+.dark .leading-relaxed {
+  color: #ccc !important;
+}
+
 /* ========== Scrollbar ========== */
 ::-webkit-scrollbar {
   width: 8px;
