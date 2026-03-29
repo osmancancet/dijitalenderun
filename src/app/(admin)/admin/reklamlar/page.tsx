@@ -60,7 +60,7 @@ export default function AdminReklamlarPage() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Reklamlar</h1>
-          <p className="text-sm text-gray-500 mt-1">Sayfanın sağ ve sol kenarındaki reklam bannerlarını yönetin. Dikey görsel yükleyin (140x500px önerilir), tıklama linki girin ve konumu seçin (sol/sağ/her ikisi). Reklam eklenmezse varsayılan &quot;destek olun&quot; bannerı gösterilir. Bannerlar sadece geniş ekranlarda (1536px+) görünür.</p>
+          <p className="text-sm text-gray-500 mt-1">Sayfanın sağ ve sol kenarındaki reklam bannerlarını yönetin. Dikey görsel yükleyin (160x600px önerilir), tıklama linki girin ve konumu seçin (sol/sağ/her ikisi). Reklam eklenmezse varsayılan &quot;destek olun&quot; bannerı gösterilir. Bannerlar sadece geniş ekranlarda (1536px+) görünür.</p>
         </div>
         <button onClick={openNew} className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary-light transition-colors">
           <Plus size={16} /> Yeni Reklam
@@ -80,7 +80,7 @@ export default function AdminReklamlarPage() {
                 <input type="text" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} className={inputCls} placeholder="ör: Kitap Tanıtımı" />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">Reklam Görseli (dikey, 120x300px önerilir)</label>
+                <label className="block text-sm font-medium mb-1">Reklam Görseli (dikey, 160x600px önerilir)</label>
                 <ImageUpload folder="reklamlar" value={form.imageUrl} onChange={(url) => setForm({ ...form, imageUrl: url })} />
               </div>
               <div>
