@@ -96,6 +96,8 @@ export async function GET() {
     return NextResponse.json({
       items: mevzuatItems,
       count: mevzuatItems.length,
+      allItems: items,
+      allCount: items.length,
       date: formattedDate,
     });
   } catch (error) {

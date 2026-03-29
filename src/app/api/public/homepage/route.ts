@@ -19,7 +19,7 @@ export async function GET() {
         personelIlanlari: (ilanlariRes.data || []).map(toCamelCase),
         videolar: (videolarRes.data || []).map(toCamelCase),
       },
-      { headers: { "Cache-Control": "s-maxage=300, stale-while-revalidate=600" } }
+      { headers: { "Cache-Control": "s-maxage=60, stale-while-revalidate=120" } }
     );
   } catch (err) {
     console.error("[homepage API] error:", err);
