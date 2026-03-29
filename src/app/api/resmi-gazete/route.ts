@@ -2,37 +2,43 @@ import { NextResponse } from "next/server";
 import * as cheerio from "cheerio";
 
 export const maxDuration = 60;
-export const preferredRegion = "fra1";
 
+const TARGET = "https://www.resmigazete.gov.tr/";
 const UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
+
+async function fetchWithTimeout(url: string, timeoutMs: number): Promise<Response> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    return await fetch(url, {
+      headers: { "User-Agent": UA, "Accept-Language": "tr-TR,tr;q=0.9" },
+      signal: controller.signal,
+    });
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+async function fetchHtml(): Promise<string> {
+  // 1. Doğrudan erişim dene
+  try {
+    const res = await fetchWithTimeout(TARGET, 10000);
+    if (res.ok) return await res.text();
+  } catch { /* devam */ }
+
+  // 2. Proxy üzerinden dene
+  const proxyUrl = `https://api.codetabs.com/v1/proxy?quest=${TARGET}`;
+  try {
+    const res = await fetchWithTimeout(proxyUrl, 15000);
+    if (res.ok) return await res.text();
+  } catch { /* devam */ }
+
+  throw new Error("Resmi Gazete sitesine ne doğrudan ne de proxy üzerinden erişilemedi");
+}
 
 export async function GET() {
   try {
-    // Ana sayfayı çek — fihrist zaten burada mevcut
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 30000);
-
-    let res: Response;
-    try {
-      res = await fetch("https://www.resmigazete.gov.tr/", {
-        headers: { "User-Agent": UA, "Accept-Language": "tr-TR,tr;q=0.9" },
-        signal: controller.signal,
-      });
-    } catch (fetchErr) {
-      clearTimeout(timeout);
-      const msg = fetchErr instanceof Error && fetchErr.name === "AbortError"
-        ? "Resmi Gazete sitesine bağlanırken zaman aşımı oluştu (30s)"
-        : `Resmi Gazete sitesine bağlanılamadı: ${fetchErr instanceof Error ? fetchErr.message : String(fetchErr)}`;
-      return NextResponse.json({ error: msg }, { status: 502 });
-    } finally {
-      clearTimeout(timeout);
-    }
-
-    if (!res.ok) {
-      return NextResponse.json({ error: `Resmi Gazete ana sayfası alınamadı (HTTP ${res.status})` }, { status: 502 });
-    }
-
-    const html = await res.text();
+    const html = await fetchHtml();
     const $ = cheerio.load(html);
 
     // Tarih bilgisi — PDF linkinden çıkar
@@ -51,10 +57,8 @@ export async function GET() {
       date: string;
     }[] = [];
 
-    // Kategori başlıkları (YÜRÜTME VE İDARE BÖLÜMÜ, YARGI BÖLÜMÜ, vs.)
     let currentCategory = "";
 
-    // card-title = bölüm başlığı, html-subtitle = alt başlık, fihrist-item = madde
     $(".card-title, .html-subtitle, .fihrist-item").each((_, el) => {
       const $el = $(el);
 
@@ -72,7 +76,6 @@ export async function GET() {
         const $a = $el.find("a");
         const href = $a.attr("href") || "";
         let text = $a.text().trim().replace(/\s+/g, " ");
-        // "–– " prefix temizle
         text = text.replace(/^[–—\-\s]+/, "").trim();
 
         if (text && href) {
@@ -86,7 +89,6 @@ export async function GET() {
       }
     });
 
-    // İlan bölümünü hariç tut (sadece mevzuat kısmını al)
     const mevzuatItems = items.filter((item) =>
       !item.sourceUrl.includes("/ilanlar/")
     );
@@ -94,16 +96,14 @@ export async function GET() {
     return NextResponse.json({
       items: mevzuatItems,
       count: mevzuatItems.length,
-      allItems: items,
-      allCount: items.length,
       date: formattedDate,
     });
   } catch (error) {
     console.error("Resmi Gazete sync hatası:", error);
     const detail = error instanceof Error ? error.message : String(error);
     return NextResponse.json(
-      { error: `Resmi Gazete verileri alınırken hata oluştu: ${detail}` },
-      { status: 500 }
+      { error: detail },
+      { status: 502 }
     );
   }
 }
