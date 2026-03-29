@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Search } from "lucide-react";
+import SearchModal from "./SearchModal";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import LanguageSwitcher from "./LanguageSwitcher";
@@ -10,6 +11,7 @@ import ThemeToggle from "@/components/shared/ThemeToggle";
 
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const t = useTranslations("nav");
 
   const navLinks = [
@@ -17,6 +19,7 @@ export default function Header() {
     { href: "/sbky-ders-notlari" as const, label: t("sbky") },
     { href: "/sbky-sozluk" as const, label: t("sozluk") },
     { href: "/mevzuat-ders-notlari" as const, label: t("mevzuat") },
+    { href: "/biyografiler" as const, label: t("biyografiler") },
     { href: "/dr-ozan-yetkin" as const, label: t("drOzan") },
     { href: "/hakkimizda" as const, label: t("about") },
     { href: "/iletisim" as const, label: t("contact") },
@@ -49,12 +52,18 @@ export default function Header() {
                 {link.label}
               </Link>
             ))}
+            <button onClick={() => setSearchOpen(true)} className="p-2 rounded-md hover:bg-white/10 transition-colors" aria-label="Ara">
+              <Search size={18} />
+            </button>
             <ThemeToggle />
             <LanguageSwitcher />
           </nav>
 
           {/* Mobile Toggle + Language */}
           <div className="flex items-center gap-2 lg:hidden">
+            <button onClick={() => setSearchOpen(true)} className="p-2 rounded-md hover:bg-white/10 transition-colors" aria-label="Ara">
+              <Search size={18} />
+            </button>
             <ThemeToggle />
             <LanguageSwitcher />
             <button
@@ -83,6 +92,7 @@ export default function Header() {
           </nav>
         )}
       </div>
+      <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
     </header>
   );
 }

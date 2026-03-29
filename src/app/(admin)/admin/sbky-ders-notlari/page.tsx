@@ -5,7 +5,10 @@ import { useAdminCollection, adminAdd, adminUpdate, adminDelete } from "@/hooks/
 import FileUpload from "@/components/admin/FileUpload";
 import LoadingSpinner from "@/components/shared/LoadingSpinner";
 import { Plus, Pencil, Trash2, X, FileText, BookOpen } from "lucide-react";
+import dynamic from "next/dynamic";
 import type { DersNotu, NoteType } from "@/types";
+
+const RichTextEditor = dynamic(() => import("@/components/admin/RichTextEditor"), { ssr: false });
 
 const COLLECTION = "sbkyDersNotlari";
 
@@ -77,7 +80,7 @@ export default function AdminSbkyDersNotlariPage() {
 
       {showForm && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl w-full max-w-lg max-h-[90vh] overflow-y-auto p-6">
+          <div className="bg-white rounded-xl w-full max-w-3xl max-h-[90vh] overflow-y-auto p-6">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-bold">{editing ? "Notu Düzenle" : "Yeni Not"}</h2>
               <button onClick={() => setShowForm(false)}><X size={20} /></button>
@@ -126,11 +129,9 @@ export default function AdminSbkyDersNotlariPage() {
               {(form.noteType === "text" || form.noteType === "both") && (
                 <div>
                   <label className="block text-sm font-medium mb-1">İçerik</label>
-                  <textarea
-                    rows={12}
-                    value={form.content}
-                    onChange={(e) => setForm({ ...form, content: e.target.value })}
-                    className="w-full px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 resize-y"
+                  <RichTextEditor
+                    content={form.content}
+                    onChange={(html) => setForm({ ...form, content: html })}
                     placeholder="Ders notu metnini buraya yazın..."
                   />
                 </div>

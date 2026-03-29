@@ -66,48 +66,23 @@ export default function HeroSlider({ slides, loading }: HeroSliderProps) {
     >
       {slides.map((slide, index) => (
         <SwiperSlide key={slide.id}>
-          <div className="relative w-full h-[400px] lg:h-[560px] flex items-center justify-center">
-            {slide.imageUrl ? (
-              <Image
-                src={slide.imageUrl}
-                alt={slide.title}
-                fill
-                style={{ objectFit: "cover" }}
-                sizes="100vw"
-                priority={index === 0}
-              />
-            ) : (
-              <>
+          {slide.linkUrl ? (
+            <a href={slide.linkUrl} target="_blank" rel="noopener noreferrer" className="block relative w-full h-[400px] lg:h-[560px] cursor-pointer">
+              {slide.imageUrl ? (
+                <Image src={slide.imageUrl} alt={slide.title} fill style={{ objectFit: "cover" }} sizes="100vw" priority={index === 0} />
+              ) : (
                 <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, #8B0000 0%, #4A0000 50%, #2D0000 100%)" }} />
-                <div className="absolute inset-0 opacity-10"
-                  style={{
-                    backgroundImage: `radial-gradient(circle at 25% 25%, white 1px, transparent 1px), radial-gradient(circle at 75% 75%, white 1px, transparent 1px)`,
-                    backgroundSize: "40px 40px",
-                  }}
-                />
-              </>
-            )}
-            {/* Dark overlay */}
-            <div className="absolute inset-0 bg-black/30" />
-
-            {/* Content */}
-            <div className="relative z-10 text-center text-white px-6 max-w-lg">
-              <h2 className="text-3xl lg:text-4xl font-bold mb-3 drop-shadow-lg">
-                {slide.title}
-              </h2>
-              <p className="text-lg text-white/90 drop-shadow-md">
-                {slide.description}
-              </p>
-              {slide.linkUrl && (
-                <a
-                  href={slide.linkUrl}
-                  className="inline-block mt-5 px-6 py-2.5 bg-white text-primary font-semibold rounded-lg hover:bg-white/90 hover:scale-105 transition-all shadow-lg"
-                >
-                  Detaylı Bilgi
-                </a>
+              )}
+            </a>
+          ) : (
+            <div className="relative w-full h-[400px] lg:h-[560px]">
+              {slide.imageUrl ? (
+                <Image src={slide.imageUrl} alt={slide.title} fill style={{ objectFit: "cover" }} sizes="100vw" priority={index === 0} />
+              ) : (
+                <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, #8B0000 0%, #4A0000 50%, #2D0000 100%)" }} />
               )}
             </div>
-          </div>
+          )}
         </SwiperSlide>
       ))}
     </Swiper>

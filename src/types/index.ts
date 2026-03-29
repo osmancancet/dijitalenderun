@@ -163,6 +163,19 @@ export interface ContactMessage {
   createdAt: string;
 }
 
+// ========== Biyografi ==========
+export interface Biyografi {
+  id: string;
+  name: string;
+  title?: string;
+  photoUrl?: string;
+  bio: string;
+  slug: string;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
 // ========== Sınav Takvimi ==========
 export interface SinavTakvimi {
   id: string;
@@ -186,4 +199,5 @@ export type CollectionName =
   | "videolar"
   | "siteSettings"
   | "contactMessages"
-  | "sinavTakvimi";
+  | "sinavTakvimi"
+  | "biyografiler";
