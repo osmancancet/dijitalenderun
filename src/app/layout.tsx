@@ -13,6 +13,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  icons: {
+    icon: "/images/logo-renkli.png",
+    apple: "/images/logo-renkli.png",
+  },
   title: {
     default: "Dijital Enderun",
     template: "%s | Dijital Enderun",

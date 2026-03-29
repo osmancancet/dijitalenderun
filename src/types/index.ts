@@ -120,6 +120,7 @@ export interface ProfilePosition {
 export interface ProfilePublication {
   type: "kitap" | "makale" | "bildiri" | "editorluk";
   text: string;
+  year?: number;
 }
 
 export interface ProfileCourse {

@@ -1,17 +1,34 @@
 import { NextResponse } from "next/server";
 import * as cheerio from "cheerio";
 
+export const maxDuration = 15;
+
 const UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
 
 export async function GET() {
   try {
     // Ana sayfayı çek — fihrist zaten burada mevcut
-    const res = await fetch("https://www.resmigazete.gov.tr/", {
-      headers: { "User-Agent": UA, "Accept-Language": "tr-TR,tr;q=0.9" },
-    });
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 10000);
+
+    let res: Response;
+    try {
+      res = await fetch("https://www.resmigazete.gov.tr/", {
+        headers: { "User-Agent": UA, "Accept-Language": "tr-TR,tr;q=0.9" },
+        signal: controller.signal,
+      });
+    } catch (fetchErr) {
+      clearTimeout(timeout);
+      const msg = fetchErr instanceof Error && fetchErr.name === "AbortError"
+        ? "Resmi Gazete sitesine bağlanırken zaman aşımı oluştu (10s)"
+        : `Resmi Gazete sitesine bağlanılamadı: ${fetchErr instanceof Error ? fetchErr.message : String(fetchErr)}`;
+      return NextResponse.json({ error: msg }, { status: 502 });
+    } finally {
+      clearTimeout(timeout);
+    }
 
     if (!res.ok) {
-      return NextResponse.json({ error: "Resmi Gazete ana sayfası alınamadı" }, { status: 502 });
+      return NextResponse.json({ error: `Resmi Gazete ana sayfası alınamadı (HTTP ${res.status})` }, { status: 502 });
     }
 
     const html = await res.text();
@@ -82,8 +99,9 @@ export async function GET() {
     });
   } catch (error) {
     console.error("Resmi Gazete sync hatası:", error);
+    const detail = error instanceof Error ? error.message : String(error);
     return NextResponse.json(
-      { error: "Resmi Gazete verileri alınırken hata oluştu" },
+      { error: `Resmi Gazete verileri alınırken hata oluştu: ${detail}` },
       { status: 500 }
     );
   }

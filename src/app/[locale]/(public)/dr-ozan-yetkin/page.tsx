@@ -343,7 +343,9 @@ export default function DrOzanYetkinPage() {
             {openSections.has("publications") && (
               <div className="space-y-5">
                 {pubTypes.map(({ key, label, icon: PubIcon }) => {
-                  const items = publications.filter((p) => p.type === key);
+                  const items = publications
+                    .filter((p) => p.type === key)
+                    .sort((a, b) => (b.year || 0) - (a.year || 0));
                   if (items.length === 0) return null;
                   return (
                     <div key={key}>
