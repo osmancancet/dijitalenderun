@@ -6,6 +6,7 @@ import { Menu, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import LanguageSwitcher from "./LanguageSwitcher";
+import ThemeToggle from "@/components/shared/ThemeToggle";
 
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -48,11 +49,13 @@ export default function Header() {
                 {link.label}
               </Link>
             ))}
+            <ThemeToggle />
             <LanguageSwitcher />
           </nav>
 
           {/* Mobile Toggle + Language */}
           <div className="flex items-center gap-2 lg:hidden">
+            <ThemeToggle />
             <LanguageSwitcher />
             <button
               onClick={() => setMobileOpen(!mobileOpen)}

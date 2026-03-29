@@ -163,6 +163,18 @@ export interface ContactMessage {
   createdAt: string;
 }
 
+// ========== Sınav Takvimi ==========
+export interface SinavTakvimi {
+  id: string;
+  title: string;
+  examDate: string;
+  applicationDeadline?: string;
+  description?: string;
+  sourceUrl?: string;
+  isActive: boolean;
+  createdAt: string;
+}
+
 // ========== Genel ==========
 export type CollectionName =
   | "slider"
@@ -173,4 +185,5 @@ export type CollectionName =
   | "sbkySozluk"
   | "videolar"
   | "siteSettings"
-  | "contactMessages";
+  | "contactMessages"
+  | "sinavTakvimi";

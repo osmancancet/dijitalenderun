@@ -25,6 +25,7 @@ const TABLE_MAP: Record<string, string> = {
   videolar: "videolar",
   siteSettings: "site_settings",
   contactMessages: "contact_messages",
+  sinavTakvimi: "sinav_takvimi",
 };
 
 export function toTableName(collection: string): string {
@@ -55,6 +56,8 @@ export function toSnakeCase(obj: Record<string, unknown>): Record<string, unknow
     isPublished: "is_published",
     publishedAt: "published_at",
     coverImageUrl: "cover_image_url",
+    examDate: "exam_date",
+    applicationDeadline: "application_deadline",
   };
   const result: Record<string, unknown> = {};
   for (const [key, value] of Object.entries(obj)) {
@@ -87,6 +90,8 @@ export function toCamelCase(obj: Record<string, unknown>): Record<string, unknow
     is_published: "isPublished",
     published_at: "publishedAt",
     cover_image_url: "coverImageUrl",
+    exam_date: "examDate",
+    application_deadline: "applicationDeadline",
   };
   const result: Record<string, unknown> = {};
   for (const [key, value] of Object.entries(obj)) {

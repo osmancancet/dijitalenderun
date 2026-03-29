@@ -114,7 +114,19 @@ INSERT INTO site_settings (id, data) VALUES
   ('iletisim', '{"address": "", "phone": "", "email": "", "mapEmbedUrl": "", "socialLinks": {}}'),
   ('drOzanYetkin', '{"title": "", "bio": "", "education": [], "academicPositions": [], "workExperience": [], "languages": [], "memberships": [], "awards": [], "researchAreas": [], "courses": [], "publications": []}');
 
--- 9. Contact Messages
+-- 9. Sınav Takvimi
+CREATE TABLE sinav_takvimi (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  title TEXT NOT NULL DEFAULT '',
+  exam_date DATE NOT NULL,
+  application_deadline DATE,
+  description TEXT,
+  source_url TEXT,
+  is_active BOOLEAN NOT NULL DEFAULT true,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+-- 10. Contact Messages
 CREATE TABLE contact_messages (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   name TEXT NOT NULL DEFAULT '',
@@ -138,6 +150,7 @@ ALTER TABLE mevzuat_ders_notlari ENABLE ROW LEVEL SECURITY;
 ALTER TABLE sbky_sozluk ENABLE ROW LEVEL SECURITY;
 ALTER TABLE videolar ENABLE ROW LEVEL SECURITY;
 ALTER TABLE site_settings ENABLE ROW LEVEL SECURITY;
+ALTER TABLE sinav_takvimi ENABLE ROW LEVEL SECURITY;
 ALTER TABLE contact_messages ENABLE ROW LEVEL SECURITY;
 
 -- Public okuma politikaları (herkes okuyabilir)
@@ -149,6 +162,7 @@ CREATE POLICY "Public read" ON mevzuat_ders_notlari FOR SELECT USING (true);
 CREATE POLICY "Public read" ON sbky_sozluk FOR SELECT USING (true);
 CREATE POLICY "Public read" ON videolar FOR SELECT USING (true);
 CREATE POLICY "Public read" ON site_settings FOR SELECT USING (true);
+CREATE POLICY "Public read" ON sinav_takvimi FOR SELECT USING (true);
 CREATE POLICY "Public read" ON contact_messages FOR SELECT USING (true);
 
 -- Service role tam erişim (API route'lar service key kullanıyor)
