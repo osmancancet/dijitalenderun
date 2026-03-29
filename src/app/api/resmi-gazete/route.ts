@@ -99,6 +99,8 @@ export async function GET() {
       allItems: items,
       allCount: items.length,
       date: formattedDate,
+    }, {
+      headers: { "Cache-Control": "s-maxage=3600, stale-while-revalidate=7200" },
     });
   } catch (error) {
     console.error("Resmi Gazete sync hatası:", error);
