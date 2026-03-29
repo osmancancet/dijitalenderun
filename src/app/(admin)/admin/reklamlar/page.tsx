@@ -60,7 +60,7 @@ export default function AdminReklamlarPage() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Reklamlar</h1>
-          <p className="text-sm text-gray-500 mt-1">Sayfanın sağ ve sol kenarındaki reklam alanlarını yönetin</p>
+          <p className="text-sm text-gray-500 mt-1">Sayfanın sağ ve sol kenarındaki reklam alanlarını yönetin. Dikey görsel yükleyin (120x400px önerilir), link ve konum (sol/sağ/her ikisi) seçip kaydedin.</p>
         </div>
         <button onClick={openNew} className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary-light transition-colors">
           <Plus size={16} /> Yeni Reklam
