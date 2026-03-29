@@ -49,7 +49,7 @@ function IlanKarti({ item, t }: { item: PersonelIlani; t: (key: string) => strin
             href={item.sourceUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 px-2.5 py-1 bg-white border border-border rounded text-[11px] font-medium text-primary hover:bg-primary-50 transition-colors shadow-sm"
+            className="inline-flex items-center gap-1 px-2.5 py-1 bg-primary-dark text-white rounded text-[11px] font-medium hover:bg-primary transition-colors shadow-sm"
           >
             <Link2 size={10} />
             resmigazete.gov.tr

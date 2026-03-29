@@ -103,6 +103,24 @@ body {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5) !important;
 }
 
+.dark .from-gray-50 {
+  --tw-gradient-from: #1a1a1a !important;
+}
+
+.dark .to-gray-100 {
+  --tw-gradient-to: #222 !important;
+}
+
+.dark .bg-green-100 { background-color: #1a2e1a !important; }
+.dark .text-green-700 { color: #6bcb6b !important; }
+.dark .bg-yellow-100 { background-color: #2e2a1a !important; }
+.dark .text-yellow-700 { color: #d4a843 !important; }
+.dark .bg-red-100 { background-color: #2e1a1a !important; }
+.dark .text-red-600 { color: #e06060 !important; }
+.dark .bg-blue-50\/50 { background-color: rgba(30, 40, 60, 0.5) !important; }
+.dark .bg-green-50\/50 { background-color: rgba(30, 50, 30, 0.5) !important; }
+.dark .bg-primary-50 { background-color: var(--primary-50) !important; }
+
 .dark input,
 .dark textarea,
 .dark select {
