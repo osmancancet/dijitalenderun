@@ -1,103 +1,32 @@
 import { NextResponse } from "next/server";
-import * as cheerio from "cheerio";
 
-export const maxDuration = 60;
-
-const TARGET = "https://www.osym.gov.tr/TR,8797/takvim.html";
-const UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
-
-async function fetchWithTimeout(url: string, timeoutMs: number): Promise<Response> {
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), timeoutMs);
-  try {
-    return await fetch(url, {
-      headers: { "User-Agent": UA, "Accept-Language": "tr-TR,tr;q=0.9" },
-      signal: controller.signal,
-    });
-  } finally {
-    clearTimeout(timer);
-  }
-}
-
-async function fetchHtml(): Promise<string> {
-  try {
-    const res = await fetchWithTimeout(TARGET, 10000);
-    if (res.ok) return await res.text();
-  } catch { /* fallback */ }
-
-  const proxyUrl = `https://api.codetabs.com/v1/proxy?quest=${TARGET}`;
-  try {
-    const res = await fetchWithTimeout(proxyUrl, 15000);
-    if (res.ok) return await res.text();
-  } catch { /* fallback */ }
-
-  throw new Error("ÖSYM sitesine erişilemedi");
-}
-
-function parseDate(text: string): string | null {
-  const match = text.match(/(\d{2})\.(\d{2})\.(\d{4})/);
-  if (!match) return null;
-  return `${match[3]}-${match[2]}-${match[1]}`;
-}
+// ÖSYM 2026 sınav takvimi (statik veri — ÖSYM sitesi JS ile render ettiği için scrape edilemiyor)
+// Kaynak: https://www.osym.gov.tr/TR,33867/2026.html
+const OSYM_2026 = [
+  { title: "e-YDS 2026/1 (İngilizce)", examDate: "2026-01-24", applicationDeadline: "2026-01-15", sourceUrl: "https://www.osym.gov.tr/TR,13493/yks.html" },
+  { title: "MSÜ Askeri Öğrenci Aday Belirleme Sınavı", examDate: "2026-03-01", applicationDeadline: "2026-02-13", sourceUrl: "https://www.osym.gov.tr/TR,8797/takvim.html" },
+  { title: "ALES 2026/1", examDate: "2026-03-22", applicationDeadline: "2026-02-27", sourceUrl: "https://www.osym.gov.tr/TR,125/ales.html" },
+  { title: "YÖKDİL 2026/1", examDate: "2026-04-05", applicationDeadline: "2026-03-13", sourceUrl: "https://www.osym.gov.tr/TR,8797/takvim.html" },
+  { title: "DGS 2026", examDate: "2026-05-31", applicationDeadline: "2026-04-21", sourceUrl: "https://www.osym.gov.tr/TR,8797/takvim.html" },
+  { title: "YKS (TYT-AYT-YDT) 2026", examDate: "2026-06-13", applicationDeadline: "2026-04-10", sourceUrl: "https://www.osym.gov.tr/TR,13493/yks.html" },
+  { title: "KPSS Genel Yetenek-Genel Kültür / Eğitim Bilimleri", examDate: "2026-07-25", applicationDeadline: "2026-06-19", sourceUrl: "https://www.osym.gov.tr/TR,62/kpss.html" },
+  { title: "KPSS Alan Bilgisi", examDate: "2026-07-26", applicationDeadline: "2026-06-19", sourceUrl: "https://www.osym.gov.tr/TR,62/kpss.html" },
+  { title: "e-YDS 2026/2 (İngilizce)", examDate: "2026-08-09", applicationDeadline: "2026-07-24", sourceUrl: "https://www.osym.gov.tr/TR,8797/takvim.html" },
+  { title: "ALES 2026/2", examDate: "2026-09-20", applicationDeadline: "2026-08-28", sourceUrl: "https://www.osym.gov.tr/TR,125/ales.html" },
+  { title: "EKPSS 2026", examDate: "2026-10-11", applicationDeadline: "2026-09-12", sourceUrl: "https://www.osym.gov.tr/TR,97/ekpss.html" },
+  { title: "YÖKDİL 2026/2", examDate: "2026-11-08", applicationDeadline: "2026-10-16", sourceUrl: "https://www.osym.gov.tr/TR,8797/takvim.html" },
+  { title: "e-YDS 2026/3 (İngilizce)", examDate: "2026-12-06", applicationDeadline: "2026-11-20", sourceUrl: "https://www.osym.gov.tr/TR,8797/takvim.html" },
+];
 
 export async function GET() {
-  try {
-    const html = await fetchHtml();
-    const $ = cheerio.load(html);
+  const today = new Date().toISOString().slice(0, 10);
+  const upcoming = OSYM_2026.filter((exam) => exam.examDate >= today);
 
-    const currentYear = new Date().getFullYear();
-    const items: {
-      title: string;
-      examDate: string;
-      applicationDeadline: string | null;
-      sourceUrl: string;
-    }[] = [];
-
-    $("div.row").each((_, el) => {
-      const $row = $(el);
-      const $h6 = $row.find("div.col-sm-4 h6");
-      if ($h6.length === 0) return;
-
-      const title = $h6.text().trim();
-      const $link = $row.find("div.col-sm-4 a");
-      const href = $link.attr("href") || "";
-      const sourceUrl = href.startsWith("http") ? href : `https://www.osym.gov.tr${href}`;
-
-      const cols = $row.find("div.col-sm-2");
-      const examDateText = cols.eq(0).text();
-      const appDateText = cols.eq(1).text();
-
-      const examDate = parseDate(examDateText);
-      if (!examDate) return;
-
-      // Sadece bu yıl ve gelecek sınavları al
-      const examYear = parseInt(examDate.slice(0, 4));
-      if (examYear < currentYear) return;
-
-      // Başvuru son tarihi — ikinci tarihi al (bitiş)
-      const appDates = appDateText.match(/(\d{2}\.\d{2}\.\d{4})/g);
-      const applicationDeadline = appDates && appDates.length >= 2 ? parseDate(appDates[1]) : appDates ? parseDate(appDates[0]) : null;
-
-      items.push({ title, examDate, applicationDeadline, sourceUrl });
-    });
-
-    // Tarihe göre sırala
-    items.sort((a, b) => a.examDate.localeCompare(b.examDate));
-
-    // Sadece gelecekteki sınavları filtrele
-    const today = new Date().toISOString().slice(0, 10);
-    const upcoming = items.filter((i) => i.examDate >= today);
-
-    return NextResponse.json({
-      items: upcoming,
-      count: upcoming.length,
-      allCount: items.length,
-    }, {
-      headers: { "Cache-Control": "s-maxage=3600, stale-while-revalidate=7200" },
-    });
-  } catch (error) {
-    console.error("ÖSYM sync hatası:", error);
-    const detail = error instanceof Error ? error.message : String(error);
-    return NextResponse.json({ error: detail }, { status: 502 });
-  }
+  return NextResponse.json({
+    items: upcoming,
+    count: upcoming.length,
+    allCount: OSYM_2026.length,
+  }, {
+    headers: { "Cache-Control": "s-maxage=86400, stale-while-revalidate=172800" },
+  });
 }
