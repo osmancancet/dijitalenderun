@@ -158,18 +158,6 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Destek / Reklam */}
-      <div className="border-t border-white/10">
-        <div className="max-w-7xl mx-auto px-4 py-4 text-center">
-          <p className="text-xs text-white/50">
-            Bu alanda reklam vererek platformumuza destek olabilirsiniz.{" "}
-            <a href="https://mail.google.com/mail/?view=cm&to=iletisim.dijitalenderun@gmail.com&su=Reklam%20/%20İş%20Birliği" target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-white underline underline-offset-2 transition-colors">
-              İletişime geçin
-            </a>
-          </p>
-        </div>
-      </div>
-
       {/* Alt Çizgi — Copyright */}
       <div className="border-t border-white/10">
         <div className="max-w-7xl mx-auto px-4 py-4 flex flex-col sm:flex-row items-center justify-between gap-2">
