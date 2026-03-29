@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   icons: {
-    icon: "/images/logo-renkli.png",
+    icon: "/images/favicon.svg",
     apple: "/images/logo-renkli.png",
   },
   title: {
