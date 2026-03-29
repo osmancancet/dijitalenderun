@@ -80,8 +80,8 @@ export default function PersonelIlanlariSection({ items, loading }: PersonelIlan
           {t("noJobPostings")}
         </div>
       ) : (
-        <div className="p-2.5 space-y-2.5 max-h-[280px] overflow-y-auto">
-          {items.map((item) => (
+        <div className="p-2.5 space-y-2.5 max-h-[220px] overflow-y-auto">
+          {items.slice(0, 2).map((item) => (
             <IlanKarti key={item.id} item={item} t={t} />
           ))}
         </div>
