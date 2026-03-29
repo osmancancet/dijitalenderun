@@ -161,9 +161,12 @@ export default function Footer() {
       {/* Alt Çizgi — Copyright */}
       <div className="border-t border-white/10">
         <div className="max-w-7xl mx-auto px-4 py-4 flex flex-col sm:flex-row items-center justify-between gap-2">
-          <p className="text-xs text-white/40">
-            &copy; {new Date().getFullYear()} Dijital Enderun. {t("rights")}
-          </p>
+          <div className="flex items-center gap-3 text-xs text-white/40">
+            <span>&copy; {new Date().getFullYear()} Dijital Enderun. {t("rights")}</span>
+            <Link href="/gizlilik-politikasi" className="hover:text-white transition-colors underline underline-offset-2">
+              Gizlilik Politikası & KVKK
+            </Link>
+          </div>
           <div className="flex items-center gap-2 text-xs text-white/30">
             <span>Tasarım ve Geliştirme:</span>
             <span className="text-white/50">Osman Can Çetlenbik</span>
