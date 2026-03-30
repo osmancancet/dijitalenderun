@@ -60,6 +60,12 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-EW8H5DV72J" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-EW8H5DV72J');`,
+          }}
+        />
         <script
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var t=localStorage.getItem("theme");if(t==="dark"||(t!=="light"&&matchMedia("(prefers-color-scheme:dark)").matches))document.documentElement.classList.add("dark")}catch(e){}})()`,
