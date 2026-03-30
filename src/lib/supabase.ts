@@ -25,7 +25,7 @@ const TABLE_MAP: Record<string, string> = {
   videolar: "videolar",
   siteSettings: "site_settings",
   contactMessages: "contact_messages",
-  sinavTakvimi: "sinav_takvimi",
+
   biyografiler: "biyografiler",
   reklamlar: "reklamlar",
 };
@@ -58,8 +58,6 @@ export function toSnakeCase(obj: Record<string, unknown>): Record<string, unknow
     isPublished: "is_published",
     publishedAt: "published_at",
     coverImageUrl: "cover_image_url",
-    examDate: "exam_date",
-    applicationDeadline: "application_deadline",
     photoUrl: "photo_url",
   };
   const result: Record<string, unknown> = {};
@@ -93,8 +91,6 @@ export function toCamelCase(obj: Record<string, unknown>): Record<string, unknow
     is_published: "isPublished",
     published_at: "publishedAt",
     cover_image_url: "coverImageUrl",
-    exam_date: "examDate",
-    application_deadline: "applicationDeadline",
     photo_url: "photoUrl",
   };
   const result: Record<string, unknown> = {};

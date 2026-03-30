@@ -2,10 +2,9 @@
 
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
-import type { SliderItem, ResmiGazeteItem, PersonelIlani, VideoItem, SinavTakvimi } from "@/types";
+import type { SliderItem, ResmiGazeteItem, PersonelIlani, VideoItem } from "@/types";
 import ResmiGazeteSection from "./ResmiGazeteSection";
 import PersonelIlanlariSection from "./PersonelIlanlariSection";
-import SinavTakvimiSection from "./SinavTakvimiSection";
 import HorizontalAdBanner from "@/components/shared/HorizontalAdBanner";
 
 const HeroSlider = dynamic(() => import("./HeroSlider"), {
@@ -30,7 +29,6 @@ interface HomeData {
   resmiGazete: ResmiGazeteItem[];
   personelIlanlari: PersonelIlani[];
   videolar: VideoItem[];
-  sinavTakvimi: SinavTakvimi[];
 }
 
 export default function HomePageClient() {
@@ -55,7 +53,6 @@ export default function HomePageClient() {
   const slides = data?.slider.filter((s) => s.isActive) ?? [];
   const gazete = data?.resmiGazete.filter((g) => g.isActive) ?? [];
   const ilanlar = data?.personelIlanlari.filter((i) => i.isActive) ?? [];
-  const sinavlar = data?.sinavTakvimi ?? [];
   const activeVideolar = data?.videolar.filter((v) => v.isActive) ?? [];
 
   const videos = activeVideolar.filter((v) => v.videoType !== "short");
@@ -93,7 +90,6 @@ export default function HomePageClient() {
         <div className="lg:col-span-4 flex flex-col gap-6">
           <ResmiGazeteSection items={gazete} loading={loading} />
           <PersonelIlanlariSection items={ilanlar} loading={loading} />
-          <SinavTakvimiSection items={sinavlar} loading={loading} />
         </div>
       </div>
 

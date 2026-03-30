@@ -16,7 +16,6 @@ import {
   Info,
   Phone,
   Video,
-  CalendarDays,
   Menu,
   X,
   LogOut,
@@ -31,7 +30,7 @@ const sidebarLinks = [
   { href: "/admin/sbky-ders-notlari", label: "SBKY Ders Notları", icon: BookOpen },
   { href: "/admin/sbky-sozluk", label: "SBKY Sözlük", icon: BookOpen },
   { href: "/admin/mevzuat-ders-notlari", label: "Mevzuat Notları", icon: Scale },
-  { href: "/admin/sinav-takvimi", label: "Sınav Takvimi", icon: CalendarDays },
+
   { href: "/admin/videolar", label: "Videolar", icon: Video },
   { href: "/admin/biyografiler", label: "Biyografiler", icon: User },
   { href: "/admin/dr-ozan-yetkin", label: "Dr. Ozan Yetkin", icon: User },

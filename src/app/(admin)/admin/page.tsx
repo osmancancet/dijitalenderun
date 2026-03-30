@@ -8,7 +8,6 @@ import {
   Scale,
   Mail,
   Video,
-  CalendarDays,
   User,
   Info,
   Phone,
@@ -23,7 +22,7 @@ const dashboardCards = [
   { href: "/admin/sbky-ders-notlari", label: "SBKY Ders Notları", icon: BookOpen, color: "bg-green-600", desc: "SBKY ders notlarını yönetin" },
   { href: "/admin/sbky-sozluk", label: "SBKY Sözlük", icon: BookOpen, color: "bg-cyan-600", desc: "SBKY sözlük terimlerini yönetin" },
   { href: "/admin/mevzuat-ders-notlari", label: "Mevzuat Notları", icon: Scale, color: "bg-purple-600", desc: "Mevzuat notlarını yönetin" },
-  { href: "/admin/sinav-takvimi", label: "Sınav Takvimi", icon: CalendarDays, color: "bg-orange-600", desc: "ÖSYM sınav takvimini yönetin" },
+
   { href: "/admin/videolar", label: "Videolar", icon: Video, color: "bg-rose-600", desc: "YouTube videolarını yönetin" },
   { href: "/admin/biyografiler", label: "Biyografiler", icon: User, color: "bg-indigo-600", desc: "SBKY önemli isimlerin biyografileri" },
   { href: "/admin/reklamlar", label: "Reklamlar", icon: ImageIcon, color: "bg-pink-600", desc: "Yan reklam alanlarını yönetin" },

@@ -187,18 +187,6 @@ export interface Biyografi {
   updatedAt: string;
 }
 
-// ========== Sınav Takvimi ==========
-export interface SinavTakvimi {
-  id: string;
-  title: string;
-  examDate: string;
-  applicationDeadline?: string;
-  description?: string;
-  sourceUrl?: string;
-  isActive: boolean;
-  createdAt: string;
-}
-
 // ========== Genel ==========
 export type CollectionName =
   | "slider"
@@ -210,6 +198,5 @@ export type CollectionName =
   | "videolar"
   | "siteSettings"
   | "contactMessages"
-  | "sinavTakvimi"
   | "biyografiler"
   | "reklamlar";
