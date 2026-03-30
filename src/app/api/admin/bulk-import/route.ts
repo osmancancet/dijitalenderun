@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
       return {
         ...snakeItem,
         is_active: snakeItem.is_active ?? true,
-        status: snakeItem.status ?? "draft",
+        status: snakeItem.status ?? "published",
         created_at: snakeItem.created_at ?? now,
       };
     });

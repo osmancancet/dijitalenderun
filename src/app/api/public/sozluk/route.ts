@@ -6,6 +6,7 @@ export async function GET() {
   const { data } = await supabase
     .from("sbky_sozluk")
     .select("*")
+    .eq("is_active", true)
     .or("status.eq.published,status.is.null")
     .order("term", { ascending: true });
 

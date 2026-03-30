@@ -4,7 +4,8 @@ import { useState } from "react";
 import { useAdminCollection, adminAdd, adminUpdate, adminDelete } from "@/hooks/useAdminCollection";
 import ImageUpload from "@/components/admin/ImageUpload";
 import LoadingSpinner from "@/components/shared/LoadingSpinner";
-import { Plus, Pencil, Trash2, X } from "lucide-react";
+import SortableList from "@/components/admin/SortableList";
+import { Plus, Pencil, Trash2, X, ArrowUpDown } from "lucide-react";
 import type { SliderItem } from "@/types";
 
 const COLLECTION = "slider";
@@ -15,6 +16,25 @@ export default function AdminSliderPage() {
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({ title: "", description: "", imageUrl: "", linkUrl: "", order: 0, isActive: true });
   const [saving, setSaving] = useState(false);
+  const [sortMode, setSortMode] = useState(false);
+  const [reordering, setReordering] = useState(false);
+
+  async function handleReorder(orderedIds: string[]) {
+    setReordering(true);
+    try {
+      const res = await fetch("/api/admin/reorder", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ collection: COLLECTION, orderedIds }),
+      });
+      if (!res.ok) throw new Error("Sıralama güncellenemedi");
+      await refresh();
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setReordering(false);
+    }
+  }
 
   function openNew() {
     setEditing(null);
@@ -60,9 +80,21 @@ export default function AdminSliderPage() {
           <h1 className="text-2xl font-bold text-foreground">Slider Yönetimi</h1>
           <p className="text-sm text-gray-500 mt-1">Ana sayfa slaytlarını yönetin</p>
         </div>
-        <button onClick={openNew} className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary-light transition-colors">
-          <Plus size={16} /> Yeni Slayt
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setSortMode(!sortMode)}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              sortMode
+                ? "bg-amber-500 text-white hover:bg-amber-600"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+            }`}
+          >
+            <ArrowUpDown size={16} /> {sortMode ? "Sıralama Modu" : "Sıralama Modu"}
+          </button>
+          <button onClick={openNew} className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary-light transition-colors">
+            <Plus size={16} /> Yeni Slayt
+          </button>
+        </div>
       </div>
 
       {/* Form Modal */}
@@ -108,40 +140,70 @@ export default function AdminSliderPage() {
         </div>
       )}
 
-      {/* Table */}
-      <div className="bg-white border border-border rounded-lg overflow-hidden">
-        <table className="w-full text-sm">
-          <thead className="bg-muted text-left">
-            <tr>
-              <th className="px-4 py-3 font-medium">Sıra</th>
-              <th className="px-4 py-3 font-medium">Başlık</th>
-              <th className="px-4 py-3 font-medium">Durum</th>
-              <th className="px-4 py-3 font-medium text-right">İşlemler</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-border">
-            {items.length === 0 ? (
-              <tr><td colSpan={4} className="px-4 py-8 text-center text-gray-400">Henüz slayt eklenmemiş.</td></tr>
-            ) : (
-              items.map((item) => (
-                <tr key={item.id} className="hover:bg-muted/50">
-                  <td className="px-4 py-3">{item.order}</td>
-                  <td className="px-4 py-3 font-medium">{item.title}</td>
-                  <td className="px-4 py-3">
-                    <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${item.isActive ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500"}`}>
-                      {item.isActive ? "Aktif" : "Pasif"}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 text-right space-x-2">
-                    <button onClick={() => openEdit(item)} className="text-blue-600 hover:text-blue-800"><Pencil size={16} /></button>
-                    <button onClick={() => handleDelete(item.id)} className="text-red-500 hover:text-red-700"><Trash2 size={16} /></button>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
+      {/* Sorting Mode */}
+      {sortMode ? (
+        <div>
+          {reordering && (
+            <div className="mb-3 px-4 py-2 bg-blue-50 border border-blue-200 text-blue-700 text-sm rounded-lg">
+              Sıralama kaydediliyor...
+            </div>
+          )}
+          {items.length === 0 ? (
+            <div className="px-4 py-8 text-center text-gray-400 bg-white border border-border rounded-lg">Henüz slayt eklenmemiş.</div>
+          ) : (
+            <SortableList
+              items={items}
+              onReorder={handleReorder}
+              renderItem={(item) => (
+                <div className="flex items-center justify-between">
+                  <div>
+                    <span className="font-medium text-sm">{item.title}</span>
+                    <span className="ml-2 text-xs text-gray-400">#{item.order}</span>
+                  </div>
+                  <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${item.isActive ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500"}`}>
+                    {item.isActive ? "Aktif" : "Pasif"}
+                  </span>
+                </div>
+              )}
+            />
+          )}
+        </div>
+      ) : (
+        /* Table */
+        <div className="bg-white border border-border rounded-lg overflow-hidden">
+          <table className="w-full text-sm">
+            <thead className="bg-muted text-left">
+              <tr>
+                <th className="px-4 py-3 font-medium">Sıra</th>
+                <th className="px-4 py-3 font-medium">Başlık</th>
+                <th className="px-4 py-3 font-medium">Durum</th>
+                <th className="px-4 py-3 font-medium text-right">İşlemler</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border">
+              {items.length === 0 ? (
+                <tr><td colSpan={4} className="px-4 py-8 text-center text-gray-400">Henüz slayt eklenmemiş.</td></tr>
+              ) : (
+                items.map((item) => (
+                  <tr key={item.id} className="hover:bg-muted/50">
+                    <td className="px-4 py-3">{item.order}</td>
+                    <td className="px-4 py-3 font-medium">{item.title}</td>
+                    <td className="px-4 py-3">
+                      <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${item.isActive ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500"}`}>
+                        {item.isActive ? "Aktif" : "Pasif"}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 text-right space-x-2">
+                      <button onClick={() => openEdit(item)} className="text-blue-600 hover:text-blue-800"><Pencil size={16} /></button>
+                      <button onClick={() => handleDelete(item.id)} className="text-red-500 hover:text-red-700"><Trash2 size={16} /></button>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 }
