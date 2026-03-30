@@ -16,6 +16,7 @@ import {
   Info,
   Phone,
   Video,
+  Mail,
   Menu,
   X,
   LogOut,
@@ -37,6 +38,7 @@ const sidebarLinks = [
   { href: "/admin/reklamlar", label: "Reklamlar", icon: Images },
   { href: "/admin/hakkimizda", label: "Hakkımızda", icon: Info },
   { href: "/admin/iletisim", label: "İletişim", icon: Phone },
+  { href: "/admin/mesajlar", label: "Mesajlar", icon: Mail },
 ];
 
 export default function AdminSidebar() {

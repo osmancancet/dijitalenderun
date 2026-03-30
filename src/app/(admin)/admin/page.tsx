@@ -47,7 +47,7 @@ const dashboardCards = [
   { href: "/admin/dr-ozan-yetkin", label: "Dr. Ozan Yetkin", icon: User, color: "bg-sky-600", desc: "Akademik profil sayfası" },
   { href: "/admin/hakkimizda", label: "Hakkımızda", icon: Info, color: "bg-gray-600", desc: "Hakkımızda sayfası içeriği" },
   { href: "/admin/iletisim", label: "İletişim", icon: Phone, color: "bg-emerald-600", desc: "İletişim bilgileri" },
-  { href: "/admin/iletisim", label: "İletişim Mesajları", icon: Mail, color: "bg-teal-600", desc: "Gelen mesajları görüntüleyin" },
+  { href: "/admin/mesajlar", label: "İletişim Mesajları", icon: Mail, color: "bg-teal-600", desc: "Gelen mesajları görüntüleyin" },
 ];
 
 const summaryCards = [
