@@ -10,7 +10,6 @@ export async function GET(request: NextRequest) {
     .from(table)
     .select("*")
     .eq("is_active", true)
-    .not("status", "eq", "draft")
     .order("created_at", { ascending: false });
 
   return NextResponse.json(
