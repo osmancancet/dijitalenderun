@@ -16,6 +16,7 @@ export default function AdminMesajlarPage() {
   async function markAsRead(item: ContactMessage) {
     if (!item.isRead) {
       await adminUpdate(COLLECTION, item.id, { isRead: true });
+      setSelected({ ...item, isRead: true });
       refresh();
     }
   }
@@ -127,12 +128,12 @@ export default function AdminMesajlarPage() {
                 <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">{selected.message}</p>
               </div>
               <div className="mt-4 pt-4 border-t border-border">
-                <a
-                  href={`mailto:${selected.email}?subject=Re: ${selected.subject}`}
+                <button
+                  onClick={() => window.open(`https://mail.google.com/mail/?view=cm&to=${encodeURIComponent(selected.email)}&su=${encodeURIComponent("Re: " + selected.subject)}`, "_blank")}
                   className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary-light transition-colors"
                 >
-                  <Mail size={14} /> Yanıtla
-                </a>
+                  <Mail size={14} /> Gmail ile Yanıtla
+                </button>
               </div>
             </div>
           ) : (
