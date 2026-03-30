@@ -6,6 +6,7 @@ import type { SliderItem, ResmiGazeteItem, PersonelIlani, VideoItem, SinavTakvim
 import ResmiGazeteSection from "./ResmiGazeteSection";
 import PersonelIlanlariSection from "./PersonelIlanlariSection";
 import SinavTakvimiSection from "./SinavTakvimiSection";
+import HorizontalAdBanner from "@/components/shared/HorizontalAdBanner";
 
 const HeroSlider = dynamic(() => import("./HeroSlider"), {
   loading: () => (
@@ -95,6 +96,8 @@ export default function HomePageClient() {
           <SinavTakvimiSection items={sinavlar} loading={loading} />
         </div>
       </div>
+
+      <HorizontalAdBanner />
 
       <VideoSection videos={videos} loading={loading} />
       <ShortsSection shorts={shorts} loading={loading} />

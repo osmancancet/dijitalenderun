@@ -6,6 +6,7 @@ import { Link } from "@/i18n/navigation";
 import PageTitle from "@/components/shared/PageTitle";
 import LoadingSpinner from "@/components/shared/LoadingSpinner";
 import { ArrowLeft, Download, BookOpen, FileText } from "lucide-react";
+import { stripHtml } from "@/lib/stripHtml";
 import type { DersNotu } from "@/types";
 
 export default function SbkyDersNotuDetailPage() {
@@ -75,7 +76,7 @@ export default function SbkyDersNotuDetailPage() {
             <span className="text-sm font-semibold text-gray-500 uppercase tracking-wider">İçerik</span>
           </div>
           <div className="prose max-w-none text-gray-700 leading-relaxed whitespace-pre-wrap text-[15px]">
-            {note.content}
+            {stripHtml(note.content)}
           </div>
         </div>
       )}

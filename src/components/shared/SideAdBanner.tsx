@@ -1,11 +1,28 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import Image from "next/image";
 import type { Reklam } from "@/types";
 
+const MAIN_PAGES = [
+  "/",
+  "/sbky-ders-notlari",
+  "/sbky-sozluk",
+  "/mevzuat-ders-notlari",
+  "/biyografiler",
+  "/dr-ozan-yetkin",
+  "/hakkimizda",
+  "/iletisim",
+];
+
 export default function SideAdBanner({ side }: { side: "left" | "right" }) {
+  const pathname = usePathname();
   const [ad, setAd] = useState<Reklam | null>(null);
+
+  // Strip locale prefix (e.g. /tr/biyografiler -> /biyografiler)
+  const cleanPath = pathname.replace(/^\/[a-z]{2}(?=\/|$)/, "") || "/";
+  const isMainPage = MAIN_PAGES.includes(cleanPath);
 
   useEffect(() => {
     fetch("/api/public/reklamlar")
@@ -60,6 +77,8 @@ export default function SideAdBanner({ side }: { side: "left" | "right" }) {
       )}
     </a>
   );
+
+  if (isMainPage) return null;
 
   return (
     <div className={`hidden 2xl:flex fixed top-1/2 -translate-y-1/2 z-30 ${side === "left" ? "left-6" : "right-6"}`}>
