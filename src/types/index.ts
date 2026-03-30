@@ -169,7 +169,7 @@ export interface Reklam {
   title: string;
   imageUrl?: string;
   linkUrl: string;
-  position: "left" | "right" | "both";
+  position: "left" | "right" | "both" | "horizontal";
   isActive: boolean;
   createdAt: string;
 }

@@ -53,14 +53,14 @@ export default function AdminReklamlarPage() {
   if (loading) return <LoadingSpinner />;
 
   const inputCls = "w-full px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/30";
-  const posLabels = { left: "Sol", right: "Sağ", both: "Her İkisi" };
+  const posLabels: Record<string, string> = { left: "Sol", right: "Sağ", both: "Her İkisi (Dikey)", horizontal: "Yatay (Ana Sayfa)" };
 
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Reklamlar</h1>
-          <p className="text-sm text-gray-500 mt-1">Sayfanın sağ ve sol kenarındaki reklam bannerlarını yönetin. Dikey görsel yükleyin (160x600px önerilir), tıklama linki girin ve konumu seçin (sol/sağ/her ikisi). Reklam eklenmezse varsayılan &quot;destek olun&quot; bannerı gösterilir. Bannerlar sadece geniş ekranlarda (1536px+) görünür.</p>
+          <p className="text-sm text-gray-500 mt-1">Reklam alanlarını yönetin. Dikey bannerlar (160x600px) alt sayfalarda sol/sağ kenarda, yatay banner (1200x120px) ana sayfada slider altında görünür.</p>
         </div>
         <button onClick={openNew} className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary-light transition-colors">
           <Plus size={16} /> Yeni Reklam
@@ -80,7 +80,9 @@ export default function AdminReklamlarPage() {
                 <input type="text" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} className={inputCls} placeholder="ör: Kitap Tanıtımı" />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">Reklam Görseli (dikey, 160x600px önerilir)</label>
+                <label className="block text-sm font-medium mb-1">
+                  Reklam Görseli ({form.position === "horizontal" ? "yatay, 1200x120px önerilir" : "dikey, 160x600px önerilir"})
+                </label>
                 <ImageUpload folder="reklamlar" value={form.imageUrl} onChange={(url) => setForm({ ...form, imageUrl: url })} />
               </div>
               <div>
@@ -90,7 +92,7 @@ export default function AdminReklamlarPage() {
               <div>
                 <label className="block text-sm font-medium mb-2">Konum</label>
                 <div className="flex gap-2">
-                  {(["left", "right", "both"] as const).map((pos) => (
+                  {(["left", "right", "both", "horizontal"] as const).map((pos) => (
                     <button key={pos} type="button" onClick={() => setForm({ ...form, position: pos })}
                       className={`flex-1 px-3 py-2 rounded-lg text-sm font-medium border transition-colors ${form.position === pos ? "bg-primary text-white border-primary" : "bg-white text-gray-600 border-border hover:border-primary/50"}`}>
                       {posLabels[pos]}

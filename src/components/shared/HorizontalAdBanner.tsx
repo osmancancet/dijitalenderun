@@ -12,7 +12,7 @@ export default function HorizontalAdBanner() {
       .then((r) => r.json())
       .then((d) => {
         const items = (d.items || []) as Reklam[];
-        const match = items.find((i) => i.position === "both" || i.position === "left");
+        const match = items.find((i) => i.position === "horizontal");
         setAd(match ?? null);
       })
       .catch(() => {});
