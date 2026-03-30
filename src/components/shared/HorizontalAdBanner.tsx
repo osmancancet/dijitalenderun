@@ -4,6 +4,13 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import type { Reklam } from "@/types";
 
+function isAdInDateRange(ad: Reklam): boolean {
+  const now = new Date().toISOString().slice(0, 10);
+  if (ad.startDate && ad.startDate.slice(0, 10) > now) return false;
+  if (ad.endDate && ad.endDate.slice(0, 10) < now) return false;
+  return true;
+}
+
 export default function HorizontalAdBanner() {
   const [ad, setAd] = useState<Reklam | null>(null);
 
@@ -12,7 +19,11 @@ export default function HorizontalAdBanner() {
       .then((r) => r.json())
       .then((d) => {
         const items = (d.items || []) as Reklam[];
-        const match = items.find((i) => i.position === "horizontal");
+        const match = items.find(
+          (i) => i.position === "horizontal" &&
+            (!i.pages || i.pages.length === 0 || i.pages.includes("all") || i.pages.includes("home")) &&
+            isAdInDateRange(i)
+        );
         setAd(match ?? null);
       })
       .catch(() => {});

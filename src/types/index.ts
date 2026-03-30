@@ -167,9 +167,13 @@ export interface ContactMessage {
 export interface Reklam {
   id: string;
   title: string;
+  advertiser?: string;
   imageUrl?: string;
   linkUrl: string;
   position: "left" | "right" | "both" | "horizontal";
+  pages: string[];
+  startDate?: string;
+  endDate?: string;
   isActive: boolean;
   createdAt: string;
 }

@@ -59,6 +59,8 @@ export function toSnakeCase(obj: Record<string, unknown>): Record<string, unknow
     publishedAt: "published_at",
     coverImageUrl: "cover_image_url",
     photoUrl: "photo_url",
+    startDate: "start_date",
+    endDate: "end_date",
   };
   const result: Record<string, unknown> = {};
   for (const [key, value] of Object.entries(obj)) {
@@ -92,6 +94,8 @@ export function toCamelCase(obj: Record<string, unknown>): Record<string, unknow
     published_at: "publishedAt",
     cover_image_url: "coverImageUrl",
     photo_url: "photoUrl",
+    start_date: "startDate",
+    end_date: "endDate",
   };
   const result: Record<string, unknown> = {};
   for (const [key, value] of Object.entries(obj)) {

@@ -5,24 +5,43 @@ import { usePathname } from "next/navigation";
 import Image from "next/image";
 import type { Reklam } from "@/types";
 
+function getPageSlug(pathname: string): string {
+  const clean = pathname.replace(/^\/[a-z]{2}(?=\/|$)/, "") || "/";
+  if (clean === "/") return "home";
+  // For detail pages like /biyografiler/max-weber, use the parent: biyografiler
+  const segments = clean.split("/").filter(Boolean);
+  return segments[0];
+}
+
+function isAdVisibleOnPage(ad: Reklam, pageSlug: string): boolean {
+  if (!ad.pages || ad.pages.length === 0 || ad.pages.includes("all")) return true;
+  return ad.pages.includes(pageSlug);
+}
+
+function isAdInDateRange(ad: Reklam): boolean {
+  const now = new Date().toISOString().slice(0, 10);
+  if (ad.startDate && ad.startDate.slice(0, 10) > now) return false;
+  if (ad.endDate && ad.endDate.slice(0, 10) < now) return false;
+  return true;
+}
+
 export default function SideAdBanner({ side }: { side: "left" | "right" }) {
   const pathname = usePathname();
   const [ad, setAd] = useState<Reklam | null>(null);
-
-  // Strip locale prefix (e.g. /tr/biyografiler -> /biyografiler)
-  const cleanPath = pathname.replace(/^\/[a-z]{2}(?=\/|$)/, "") || "/";
-  const isHomePage = cleanPath === "/";
+  const pageSlug = getPageSlug(pathname);
 
   useEffect(() => {
     fetch("/api/public/reklamlar")
       .then((r) => r.json())
       .then((d) => {
         const items = (d.items || []) as Reklam[];
-        const match = items.find((i) => i.position === side || i.position === "both");
+        const match = items.find(
+          (i) => (i.position === side || i.position === "both") && isAdVisibleOnPage(i, pageSlug) && isAdInDateRange(i)
+        );
         setAd(match ?? null);
       })
       .catch(() => {});
-  }, [side]);
+  }, [side, pageSlug]);
 
   const defaultBanner = (
     <a
@@ -67,7 +86,8 @@ export default function SideAdBanner({ side }: { side: "left" | "right" }) {
     </a>
   );
 
-  if (isHomePage) return null;
+  // Ana sayfada side banner gösterme (orada yatay banner var)
+  if (pageSlug === "home") return null;
 
   return (
     <div className={`hidden 2xl:flex fixed top-1/2 -translate-y-1/2 z-30 ${side === "left" ? "left-2" : "right-2"}`}>

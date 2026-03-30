@@ -170,3 +170,13 @@ CREATE POLICY "Public read" ON contact_messages FOR SELECT USING (true);
 
 -- Contact messages: herkes ekleyebilir (form gönderimi)
 CREATE POLICY "Public insert" ON contact_messages FOR INSERT WITH CHECK (true);
+
+-- ============================================
+-- Reklamlar tablosu güncelleme (yeni alanlar)
+-- ============================================
+-- Aşağıdaki SQL'i Supabase SQL Editor'de çalıştırın:
+
+ALTER TABLE reklamlar ADD COLUMN IF NOT EXISTS advertiser TEXT DEFAULT '';
+ALTER TABLE reklamlar ADD COLUMN IF NOT EXISTS pages TEXT[] DEFAULT ARRAY['all'];
+ALTER TABLE reklamlar ADD COLUMN IF NOT EXISTS start_date DATE;
+ALTER TABLE reklamlar ADD COLUMN IF NOT EXISTS end_date DATE;
