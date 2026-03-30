@@ -60,7 +60,7 @@ export default function AdminReklamlarPage() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Reklamlar</h1>
-          <p className="text-sm text-gray-500 mt-1">Reklam alanlarını yönetin. Dikey bannerlar (160x600px) alt sayfalarda sol/sağ kenarda, yatay banner (1200x120px) ana sayfada slider altında görünür.</p>
+          <p className="text-sm text-gray-500 mt-1">Reklam alanlarını yönetin. Dikey bannerlar (140x500px) tüm sayfalarda sol/sağ kenarda (ana sayfa hariç), yatay banner (1200x160px) ana sayfada slider altında görünür.</p>
         </div>
         <button onClick={openNew} className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary-light transition-colors">
           <Plus size={16} /> Yeni Reklam
@@ -81,7 +81,7 @@ export default function AdminReklamlarPage() {
               </div>
               <div>
                 <label className="block text-sm font-medium mb-1">
-                  Reklam Görseli ({form.position === "horizontal" ? "yatay, 1200x120px önerilir" : "dikey, 160x600px önerilir"})
+                  Reklam Görseli ({form.position === "horizontal" ? "yatay, 1200x160px önerilir" : "dikey, 140x500px önerilir"})
                 </label>
                 <ImageUpload folder="reklamlar" value={form.imageUrl} onChange={(url) => setForm({ ...form, imageUrl: url })} />
               </div>
