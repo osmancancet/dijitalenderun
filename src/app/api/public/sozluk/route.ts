@@ -7,7 +7,7 @@ export async function GET() {
     .from("sbky_sozluk")
     .select("*")
     .eq("is_active", true)
-    .or("status.eq.published,status.is.null")
+    .not("status", "eq", "draft")
     .order("term", { ascending: true });
 
   return NextResponse.json(
