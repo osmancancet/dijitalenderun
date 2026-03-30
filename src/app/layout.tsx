@@ -14,6 +14,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  verification: {
+    google: "sCejMD7uwBaevQP_u7rvJZypcpnuHKfHzrHuvD3IsI8",
+  },
   manifest: "/manifest.json",
   icons: {
     icon: "/images/favicon.png",
