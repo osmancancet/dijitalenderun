@@ -3,6 +3,7 @@ import Footer from "@/components/layout/Footer";
 import GoogleAnalytics from "@/components/shared/GoogleAnalytics";
 import AdSense from "@/components/shared/AdSense";
 import SideAdBanner from "@/components/shared/SideAdBanner";
+import MicrosoftClarity from "@/components/shared/MicrosoftClarity";
 
 export default function PublicLayout({
   children,
@@ -12,6 +13,7 @@ export default function PublicLayout({
   return (
     <>
       <GoogleAnalytics />
+      <MicrosoftClarity />
       <AdSense />
       <Header />
       <SideAdBanner side="left" />
