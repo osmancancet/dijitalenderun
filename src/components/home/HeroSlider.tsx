@@ -54,37 +54,44 @@ export default function HeroSlider({ slides, loading }: HeroSliderProps) {
   }
 
   return (
-    <Swiper
-      modules={[Navigation, Pagination, Autoplay, EffectFade]}
-      effect="fade"
-      fadeEffect={{ crossFade: true }}
-      navigation
-      pagination={{ clickable: true }}
-      autoplay={{ delay: 5000, disableOnInteraction: false }}
-      loop={slides.length > 1}
-      className="w-full h-[400px] lg:h-[560px] rounded-lg overflow-hidden"
-    >
-      {slides.map((slide, index) => (
-        <SwiperSlide key={slide.id}>
-          {slide.linkUrl ? (
-            <a href={slide.linkUrl} target="_blank" rel="noopener noreferrer" className="block relative w-full h-[400px] lg:h-[560px] cursor-pointer">
-              {slide.imageUrl ? (
-                <Image src={slide.imageUrl} alt={slide.title} fill style={{ objectFit: "cover" }} sizes="100vw" priority={index === 0} />
-              ) : (
-                <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, #8B0000 0%, #4A0000 50%, #2D0000 100%)" }} />
-              )}
-            </a>
-          ) : (
-            <div className="relative w-full h-[400px] lg:h-[560px]">
-              {slide.imageUrl ? (
-                <Image src={slide.imageUrl} alt={slide.title} fill style={{ objectFit: "cover" }} sizes="100vw" priority={index === 0} />
-              ) : (
-                <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, #8B0000 0%, #4A0000 50%, #2D0000 100%)" }} />
-              )}
-            </div>
-          )}
-        </SwiperSlide>
-      ))}
-    </Swiper>
+    <>
+      <Swiper
+        modules={[Navigation, Pagination, Autoplay, EffectFade]}
+        effect="fade"
+        fadeEffect={{ crossFade: true }}
+        navigation
+        pagination={{ clickable: true }}
+        autoplay={{ delay: 5000, disableOnInteraction: false }}
+        loop={slides.length > 1}
+        className="hero-swiper w-full rounded-lg overflow-hidden"
+      >
+        {slides.map((slide, index) => (
+          <SwiperSlide key={slide.id}>
+            {slide.linkUrl ? (
+              <a href={slide.linkUrl} target="_blank" rel="noopener noreferrer" className="block relative w-full h-[400px] lg:h-[560px] cursor-pointer">
+                {slide.imageUrl ? (
+                  <Image src={slide.imageUrl} alt={slide.title} fill style={{ objectFit: "cover" }} sizes="100vw" priority={index === 0} />
+                ) : (
+                  <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, #8B0000 0%, #4A0000 50%, #2D0000 100%)" }} />
+                )}
+              </a>
+            ) : (
+              <div className="relative w-full h-[400px] lg:h-[560px]">
+                {slide.imageUrl ? (
+                  <Image src={slide.imageUrl} alt={slide.title} fill style={{ objectFit: "cover" }} sizes="100vw" priority={index === 0} />
+                ) : (
+                  <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, #8B0000 0%, #4A0000 50%, #2D0000 100%)" }} />
+                )}
+              </div>
+            )}
+          </SwiperSlide>
+        ))}
+      </Swiper>
+      <style jsx global>{`
+        .hero-swiper { height: 400px !important; }
+        @media (min-width: 1024px) { .hero-swiper { height: 560px !important; } }
+        .hero-swiper .swiper-pagination { bottom: 12px !important; }
+      `}</style>
+    </>
   );
 }
