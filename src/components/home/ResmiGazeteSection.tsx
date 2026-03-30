@@ -1,6 +1,7 @@
 "use client";
 
-import { Newspaper, ExternalLink, ChevronRight } from "lucide-react";
+import { useState } from "react";
+import { Newspaper, ExternalLink, ChevronRight, ChevronLeft } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import type { ResmiGazeteItem } from "@/types";
@@ -12,19 +13,46 @@ interface ResmiGazeteSectionProps {
 
 export default function ResmiGazeteSection({ items, loading }: ResmiGazeteSectionProps) {
   const t = useTranslations("home");
+  const [page, setPage] = useState(0);
+  const perPage = 2;
+  const totalPages = Math.ceil(items.length / perPage);
+  const visible = items.slice(page * perPage, page * perPage + perPage);
 
   return (
     <div className="bg-white border border-border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
       {/* Header */}
-      <div className="bg-primary text-white px-4 py-2.5 flex items-center gap-2">
-        <Newspaper size={18} />
-        <h3 className="font-bold text-xs uppercase tracking-wide">{t("resmiGazete")}</h3>
+      <div className="bg-primary text-white px-4 py-2.5 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Newspaper size={18} />
+          <h3 className="font-bold text-xs uppercase tracking-wide">{t("resmiGazete")}</h3>
+        </div>
+        {totalPages > 1 && (
+          <div className="flex items-center gap-1">
+            <button
+              onClick={() => setPage((p) => Math.max(0, p - 1))}
+              disabled={page === 0}
+              className="p-0.5 rounded hover:bg-white/20 transition-colors disabled:opacity-30"
+            >
+              <ChevronLeft size={14} />
+            </button>
+            <span className="text-[10px] font-medium min-w-[28px] text-center">
+              {page + 1}/{totalPages}
+            </span>
+            <button
+              onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
+              disabled={page === totalPages - 1}
+              className="p-0.5 rounded hover:bg-white/20 transition-colors disabled:opacity-30"
+            >
+              <ChevronRight size={14} />
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Items */}
       {loading ? (
         <div className="divide-y divide-border">
-          {[1, 2, 3].map((i) => (
+          {[1, 2].map((i) => (
             <div key={i} className="px-3 py-2.5 animate-pulse">
               <div className="h-3.5 bg-gray-200 rounded w-3/4 mb-1.5" />
               <div className="h-3 bg-gray-100 rounded w-1/2" />
@@ -37,7 +65,7 @@ export default function ResmiGazeteSection({ items, loading }: ResmiGazeteSectio
         </div>
       ) : (
         <ul className="divide-y divide-border">
-          {items.slice(0, 4).map((item) => (
+          {visible.map((item) => (
             <li key={item.id}>
               <a
                 href={item.sourceUrl || "#"}
