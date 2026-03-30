@@ -88,6 +88,7 @@ export default function HomePageClient() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         <div className="lg:col-span-8">
           <HeroSlider slides={slides} loading={loading} />
+          <HorizontalAdBanner />
         </div>
 
         <div className="lg:col-span-4 flex flex-col gap-6">
@@ -96,8 +97,6 @@ export default function HomePageClient() {
           <SinavTakvimiSection items={sinavlar} loading={loading} />
         </div>
       </div>
-
-      <HorizontalAdBanner />
 
       <VideoSection videos={videos} loading={loading} />
       <ShortsSection shorts={shorts} loading={loading} />
