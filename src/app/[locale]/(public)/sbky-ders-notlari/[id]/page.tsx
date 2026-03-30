@@ -7,17 +7,22 @@ import PageTitle from "@/components/shared/PageTitle";
 import LoadingSpinner from "@/components/shared/LoadingSpinner";
 import { ArrowLeft, Download, BookOpen, FileText } from "lucide-react";
 import { stripHtml } from "@/lib/stripHtml";
+import RelatedNotes from "@/components/content/RelatedNotes";
 import type { DersNotu } from "@/types";
 
 export default function SbkyDersNotuDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [note, setNote] = useState<DersNotu | null>(null);
+  const [relatedNotes, setRelatedNotes] = useState<DersNotu[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetch(`/api/public/ders-notlari/${id}?type=sbky`)
       .then((res) => res.json())
-      .then((d) => setNote(d.note ?? null))
+      .then((d) => {
+        setNote(d.note ?? null);
+        setRelatedNotes(d.relatedNotes ?? []);
+      })
       .catch(() => {})
       .finally(() => setLoading(false));
   }, [id]);
@@ -80,6 +85,8 @@ export default function SbkyDersNotuDetailPage() {
           </div>
         </div>
       )}
+
+      <RelatedNotes notes={relatedNotes} basePath="/sbky-ders-notlari" />
     </div>
   );
 }

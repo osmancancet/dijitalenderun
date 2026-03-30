@@ -9,6 +9,7 @@ export async function GET(request: NextRequest) {
   const { data } = await supabase
     .from(table)
     .select("*")
+    .or("status.eq.published,status.is.null")
     .order("created_at", { ascending: false });
 
   return NextResponse.json(

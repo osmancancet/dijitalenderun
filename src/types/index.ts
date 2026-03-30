@@ -51,6 +51,7 @@ export interface DersNotu {
   fileSize?: number;
   thumbnailUrl?: string;
   downloadCount: number;
+  status?: "draft" | "published";
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
@@ -62,6 +63,7 @@ export interface SozlukItem {
   term: string;
   definition: string;
   category?: string;
+  status?: "draft" | "published";
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
@@ -186,6 +188,7 @@ export interface Biyografi {
   photoUrl?: string;
   bio: string;
   slug: string;
+  status?: "draft" | "published";
   isActive: boolean;
   createdAt: string;
   updatedAt: string;

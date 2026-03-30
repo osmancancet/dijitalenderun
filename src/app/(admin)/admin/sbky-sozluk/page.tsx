@@ -4,7 +4,14 @@ import { useState } from "react";
 import { useAdminCollection, adminAdd, adminUpdate, adminDelete } from "@/hooks/useAdminCollection";
 import LoadingSpinner from "@/components/shared/LoadingSpinner";
 import { Plus, Pencil, Trash2, X } from "lucide-react";
+import CsvImport from "@/components/admin/CsvImport";
 import type { SozlukItem } from "@/types";
+
+const CSV_FIELDS = [
+  { key: "term", label: "Terim", required: true },
+  { key: "definition", label: "Tanım", required: true },
+  { key: "category", label: "Kategori" },
+];
 
 const COLLECTION = "sbkySozluk";
 
@@ -12,18 +19,18 @@ export default function AdminSbkySozlukPage() {
   const { items, loading, refresh } = useAdminCollection<SozlukItem>(COLLECTION);
   const [editing, setEditing] = useState<SozlukItem | null>(null);
   const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState({ term: "", definition: "", category: "", isActive: true });
+  const [form, setForm] = useState({ term: "", definition: "", category: "", isActive: true, status: "published" as "draft" | "published" });
   const [saving, setSaving] = useState(false);
 
   function openNew() {
     setEditing(null);
-    setForm({ term: "", definition: "", category: "", isActive: true });
+    setForm({ term: "", definition: "", category: "", isActive: true, status: "published" });
     setShowForm(true);
   }
 
   function openEdit(item: SozlukItem) {
     setEditing(item);
-    setForm({ term: item.term, definition: item.definition, category: item.category || "", isActive: item.isActive });
+    setForm({ term: item.term, definition: item.definition, category: item.category || "", isActive: item.isActive, status: item.status || "published" });
     setShowForm(true);
   }
 
@@ -59,9 +66,12 @@ export default function AdminSbkySozlukPage() {
           <h1 className="text-2xl font-bold text-foreground">SBKY Sözlük</h1>
           <p className="text-sm text-gray-500 mt-1">SBKY terimlerini ve tanımlarını yönetin</p>
         </div>
-        <button onClick={openNew} className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary-light transition-colors">
-          <Plus size={16} /> Yeni Terim
-        </button>
+        <div className="flex items-center gap-2">
+          <CsvImport collection={COLLECTION} fields={CSV_FIELDS} onComplete={refresh} />
+          <button onClick={openNew} className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary-light transition-colors">
+            <Plus size={16} /> Yeni Terim
+          </button>
+        </div>
       </div>
 
       {showForm && (
@@ -84,6 +94,30 @@ export default function AdminSbkySozlukPage() {
                 <label className="block text-sm font-medium mb-1">Kategori (opsiyonel)</label>
                 <input type="text" value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} className="w-full px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/30" placeholder="Örn: Yönetim Bilimi" />
               </div>
+              {/* Yayın Durumu */}
+              <div>
+                <label className="block text-sm font-medium mb-2">Yayın Durumu</label>
+                <div className="flex gap-2">
+                  {([
+                    { value: "draft" as const, label: "Taslak" },
+                    { value: "published" as const, label: "Yayında" },
+                  ]).map((opt) => (
+                    <button
+                      key={opt.value}
+                      type="button"
+                      onClick={() => setForm({ ...form, status: opt.value })}
+                      className={`flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium border transition-colors ${
+                        form.status === opt.value
+                          ? opt.value === "published" ? "bg-green-600 text-white border-green-600" : "bg-yellow-500 text-white border-yellow-500"
+                          : "bg-white text-gray-600 border-border hover:border-primary/50"
+                      }`}
+                    >
+                      {opt.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
               <div className="flex items-center gap-2">
                 <input type="checkbox" id="active" checked={form.isActive} onChange={(e) => setForm({ ...form, isActive: e.target.checked })} className="accent-primary" />
                 <label htmlFor="active" className="text-sm">Aktif</label>
@@ -115,9 +149,14 @@ export default function AdminSbkySozlukPage() {
                   <td className="px-4 py-3 font-medium">{item.term}</td>
                   <td className="px-4 py-3 text-gray-500">{item.category || "—"}</td>
                   <td className="px-4 py-3">
-                    <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${item.isActive ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500"}`}>
-                      {item.isActive ? "Aktif" : "Pasif"}
-                    </span>
+                    <div className="flex flex-col gap-1">
+                      <span className={`inline-block w-fit px-2 py-0.5 rounded-full text-xs font-medium ${(item.status || "published") === "published" ? "bg-green-100 text-green-700" : "bg-yellow-100 text-yellow-700"}`}>
+                        {(item.status || "published") === "published" ? "Yayında" : "Taslak"}
+                      </span>
+                      {!item.isActive && (
+                        <span className="inline-block w-fit px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-500">Pasif</span>
+                      )}
+                    </div>
                   </td>
                   <td className="px-4 py-3 text-right space-x-2">
                     <button onClick={() => openEdit(item)} className="text-blue-600 hover:text-blue-800"><Pencil size={16} /></button>

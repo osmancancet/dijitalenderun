@@ -180,3 +180,13 @@ ALTER TABLE reklamlar ADD COLUMN IF NOT EXISTS advertiser TEXT DEFAULT '';
 ALTER TABLE reklamlar ADD COLUMN IF NOT EXISTS pages TEXT[] DEFAULT ARRAY['all'];
 ALTER TABLE reklamlar ADD COLUMN IF NOT EXISTS start_date DATE;
 ALTER TABLE reklamlar ADD COLUMN IF NOT EXISTS end_date DATE;
+
+-- ============================================
+-- Taslak/Yayın durumu (Draft/Publish workflow)
+-- ============================================
+-- Mevcut kayıtlar varsayılan olarak 'published' kabul edilir.
+
+ALTER TABLE sbky_ders_notlari ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'published';
+ALTER TABLE mevzuat_ders_notlari ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'published';
+ALTER TABLE sbky_sozluk ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'published';
+ALTER TABLE biyografiler ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'published';

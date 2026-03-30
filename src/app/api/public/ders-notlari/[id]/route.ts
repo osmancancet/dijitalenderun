@@ -20,8 +20,21 @@ export async function GET(
     return NextResponse.json({ error: "Not bulunamadı" }, { status: 404 });
   }
 
+  // Fetch up to 4 related notes from the same category
+  const { data: relatedData } = await supabase
+    .from(table)
+    .select("*")
+    .eq("category", data.category)
+    .eq("is_active", true)
+    .neq("id", id)
+    .order("created_at", { ascending: false })
+    .limit(4);
+
   return NextResponse.json(
-    { note: toCamelCase(data) },
+    {
+      note: toCamelCase(data),
+      relatedNotes: (relatedData ?? []).map(toCamelCase),
+    },
     { headers: { "Cache-Control": "s-maxage=300, stale-while-revalidate=600" } }
   );
 }

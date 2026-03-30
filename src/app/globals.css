@@ -192,6 +192,9 @@ body {
 .animate-fade-in {
   animation: fadeIn 0.5s ease-out forwards;
 }
+.animate-page-transition {
+  animation: fadeIn 0.3s ease forwards;
+}
 .animate-slide-in-left {
   animation: slideInLeft 0.5s ease-out forwards;
 }

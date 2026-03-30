@@ -20,12 +20,13 @@ export default function AdminMevzuatDersNotlariPage() {
     title: "", description: "", category: "", content: "",
     noteType: "file" as NoteType,
     fileUrl: "", fileName: "", fileSize: 0, isActive: true,
+    status: "published" as "draft" | "published",
   });
   const [saving, setSaving] = useState(false);
 
   function openNew() {
     setEditing(null);
-    setForm({ title: "", description: "", category: "", content: "", noteType: "file", fileUrl: "", fileName: "", fileSize: 0, isActive: true });
+    setForm({ title: "", description: "", category: "", content: "", noteType: "file", fileUrl: "", fileName: "", fileSize: 0, isActive: true, status: "published" });
     setShowForm(true);
   }
 
@@ -35,7 +36,7 @@ export default function AdminMevzuatDersNotlariPage() {
       title: item.title, description: item.description, category: item.category,
       content: item.content || "", noteType: item.noteType || "file",
       fileUrl: item.fileUrl || "", fileName: item.fileName || "", fileSize: item.fileSize || 0,
-      isActive: item.isActive,
+      isActive: item.isActive, status: item.status || "published",
     });
     setShowForm(true);
   }
@@ -150,6 +151,30 @@ export default function AdminMevzuatDersNotlariPage() {
                 </div>
               )}
 
+              {/* Yayın Durumu */}
+              <div>
+                <label className="block text-sm font-medium mb-2">Yayın Durumu</label>
+                <div className="flex gap-2">
+                  {([
+                    { value: "draft" as const, label: "Taslak" },
+                    { value: "published" as const, label: "Yayında" },
+                  ]).map((opt) => (
+                    <button
+                      key={opt.value}
+                      type="button"
+                      onClick={() => setForm({ ...form, status: opt.value })}
+                      className={`flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium border transition-colors ${
+                        form.status === opt.value
+                          ? opt.value === "published" ? "bg-green-600 text-white border-green-600" : "bg-yellow-500 text-white border-yellow-500"
+                          : "bg-white text-gray-600 border-border hover:border-primary/50"
+                      }`}
+                    >
+                      {opt.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
               <div className="flex items-center gap-2">
                 <input type="checkbox" id="active" checked={form.isActive} onChange={(e) => setForm({ ...form, isActive: e.target.checked })} className="accent-primary" />
                 <label htmlFor="active" className="text-sm">Aktif</label>
@@ -193,9 +218,14 @@ export default function AdminMevzuatDersNotlariPage() {
                   </td>
                   <td className="px-4 py-3 text-gray-500">{item.downloadCount}</td>
                   <td className="px-4 py-3">
-                    <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${item.isActive ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500"}`}>
-                      {item.isActive ? "Aktif" : "Pasif"}
-                    </span>
+                    <div className="flex flex-col gap-1">
+                      <span className={`inline-block w-fit px-2 py-0.5 rounded-full text-xs font-medium ${(item.status || "published") === "published" ? "bg-green-100 text-green-700" : "bg-yellow-100 text-yellow-700"}`}>
+                        {(item.status || "published") === "published" ? "Yayında" : "Taslak"}
+                      </span>
+                      {!item.isActive && (
+                        <span className="inline-block w-fit px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-500">Pasif</span>
+                      )}
+                    </div>
                   </td>
                   <td className="px-4 py-3 text-right space-x-2">
                     <button onClick={() => openEdit(item)} className="text-blue-600 hover:text-blue-800"><Pencil size={16} /></button>

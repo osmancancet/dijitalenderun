@@ -5,7 +5,9 @@ import dynamic from "next/dynamic";
 import type { SliderItem, ResmiGazeteItem, PersonelIlani, VideoItem } from "@/types";
 import ResmiGazeteSection from "./ResmiGazeteSection";
 import PersonelIlanlariSection from "./PersonelIlanlariSection";
-import HorizontalAdBanner from "@/components/shared/HorizontalAdBanner";
+const HorizontalAdBanner = dynamic(() => import("@/components/shared/HorizontalAdBanner"), {
+  ssr: false,
+});
 
 const HeroSlider = dynamic(() => import("./HeroSlider"), {
   loading: () => (
