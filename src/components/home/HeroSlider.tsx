@@ -54,7 +54,7 @@ export default function HeroSlider({ slides, loading }: HeroSliderProps) {
   }
 
   return (
-    <>
+    <div className="w-full h-[400px] lg:h-[560px] rounded-lg overflow-hidden relative">
       <Swiper
         modules={[Navigation, Pagination, Autoplay, EffectFade]}
         effect="fade"
@@ -63,12 +63,12 @@ export default function HeroSlider({ slides, loading }: HeroSliderProps) {
         pagination={{ clickable: true }}
         autoplay={{ delay: 5000, disableOnInteraction: false }}
         loop={slides.length > 1}
-        className="hero-swiper w-full rounded-lg overflow-hidden"
+        style={{ position: "absolute", inset: 0, height: "100%", width: "100%" }}
       >
         {slides.map((slide, index) => (
           <SwiperSlide key={slide.id}>
             {slide.linkUrl ? (
-              <a href={slide.linkUrl} target="_blank" rel="noopener noreferrer" className="block relative w-full h-[400px] lg:h-[560px] cursor-pointer">
+              <a href={slide.linkUrl} target="_blank" rel="noopener noreferrer" className="block relative w-full h-full cursor-pointer">
                 {slide.imageUrl ? (
                   <Image src={slide.imageUrl} alt={slide.title} fill style={{ objectFit: "cover" }} sizes="100vw" priority={index === 0} />
                 ) : (
@@ -76,7 +76,7 @@ export default function HeroSlider({ slides, loading }: HeroSliderProps) {
                 )}
               </a>
             ) : (
-              <div className="relative w-full h-[400px] lg:h-[560px]">
+              <div className="relative w-full h-full">
                 {slide.imageUrl ? (
                   <Image src={slide.imageUrl} alt={slide.title} fill style={{ objectFit: "cover" }} sizes="100vw" priority={index === 0} />
                 ) : (
@@ -87,11 +87,6 @@ export default function HeroSlider({ slides, loading }: HeroSliderProps) {
           </SwiperSlide>
         ))}
       </Swiper>
-      <style jsx global>{`
-        .hero-swiper { height: 400px !important; }
-        @media (min-width: 1024px) { .hero-swiper { height: 560px !important; } }
-        .hero-swiper .swiper-pagination { bottom: 12px !important; }
-      `}</style>
-    </>
+    </div>
   );
 }
