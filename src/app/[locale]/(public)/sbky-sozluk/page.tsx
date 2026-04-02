@@ -10,18 +10,22 @@ import type { SozlukItem } from "@/types";
 export default function SbkySozlukPage() {
   const [items, setItems] = useState<SozlukItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [activeLetter, setActiveLetter] = useState<string | null>(null);
 
-  useEffect(() => {
+  function fetchData() {
+    setLoading(true); setError(false);
     fetch("/api/public/sozluk")
       .then((res) => res.json())
       .then((d) => setItems(d.items ?? []))
-      .catch(() => {})
+      .catch(() => setError(true))
       .finally(() => setLoading(false));
-  }, []);
+  }
+
+  useEffect(() => { fetchData(); }, []);
 
   const activeItems = items.filter((i) => i.isActive);
   const categories = useMemo(
@@ -62,6 +66,12 @@ export default function SbkySozlukPage() {
   }
 
   if (loading) return <LoadingSpinner />;
+  if (error) return (
+    <div className="max-w-7xl mx-auto px-4 py-16 text-center">
+      <p className="text-gray-500 mb-4">Veriler yüklenirken bir hata oluştu.</p>
+      <button onClick={fetchData} className="px-4 py-2 bg-primary text-white rounded-lg text-sm hover:bg-primary-light">Tekrar Dene</button>
+    </div>
+  );
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">

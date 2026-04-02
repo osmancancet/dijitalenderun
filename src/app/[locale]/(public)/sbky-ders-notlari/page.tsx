@@ -11,16 +11,21 @@ import type { DersNotu } from "@/types";
 export default function SbkyDersNotlariPage() {
   const [items, setItems] = useState<DersNotu[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
 
-  useEffect(() => {
+  function fetchData() {
+    setLoading(true);
+    setError(false);
     fetch("/api/public/ders-notlari?type=sbky")
       .then((res) => res.json())
       .then((d) => setItems(d.notes ?? []))
-      .catch(() => {})
+      .catch(() => setError(true))
       .finally(() => setLoading(false));
-  }, []);
+  }
+
+  useEffect(() => { fetchData(); }, []);
 
   const notes = items.filter((n) => n.isActive);
   const categories = useMemo(() => [...new Set(notes.map((n) => n.category))], [notes]);
@@ -36,6 +41,12 @@ export default function SbkyDersNotlariPage() {
   }, [notes, activeCategory, search]);
 
   if (loading) return <LoadingSpinner />;
+  if (error) return (
+    <div className="max-w-7xl mx-auto px-4 py-16 text-center">
+      <p className="text-gray-500 mb-4">Veriler yüklenirken bir hata oluştu.</p>
+      <button onClick={fetchData} className="px-4 py-2 bg-primary text-white rounded-lg text-sm hover:bg-primary-light">Tekrar Dene</button>
+    </div>
+  );
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">

@@ -14,18 +14,28 @@ export default function PersonelIlanlariPage() {
   const home = useTranslations("home");
   const [allItems, setAllItems] = useState<PersonelIlani[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
-  useEffect(() => {
+  function fetchData() {
+    setLoading(true); setError(false);
     fetch("/api/public/personel-ilanlari")
       .then((res) => res.json())
       .then((d) => setAllItems(d.items ?? []))
-      .catch(() => {})
+      .catch(() => setError(true))
       .finally(() => setLoading(false));
-  }, []);
+  }
+
+  useEffect(() => { fetchData(); }, []);
 
   const items = allItems.filter((i) => i.isActive);
 
   if (loading) return <LoadingSpinner />;
+  if (error) return (
+    <div className="max-w-7xl mx-auto px-4 py-16 text-center">
+      <p className="text-gray-500 mb-4">Veriler yüklenirken bir hata oluştu.</p>
+      <button onClick={fetchData} className="px-4 py-2 bg-primary text-white rounded-lg text-sm hover:bg-primary-light">Tekrar Dene</button>
+    </div>
+  );
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
