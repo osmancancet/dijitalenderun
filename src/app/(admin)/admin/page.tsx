@@ -17,6 +17,7 @@ import {
   Loader2,
 } from "lucide-react";
 import Link from "next/link";
+import { getSupabaseClient } from "@/lib/supabase";
 
 type Stats = Record<string, number>;
 
@@ -61,13 +62,19 @@ export default function AdminDashboardPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/admin/stats")
-      .then((res) => res.json())
-      .then((data) => {
+    async function fetchStats() {
+      try {
+        const supabase = getSupabaseClient();
+        const { data: { session } } = await supabase.auth.getSession();
+        const res = await fetch("/api/admin/stats", {
+          headers: session?.access_token ? { Authorization: `Bearer ${session.access_token}` } : {},
+        });
+        const data = await res.json();
         if (!data.error) setStats(data);
-      })
-      .catch(() => {})
-      .finally(() => setLoading(false));
+      } catch {}
+      finally { setLoading(false); }
+    }
+    fetchStats();
   }, []);
 
   return (
