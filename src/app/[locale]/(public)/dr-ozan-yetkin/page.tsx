@@ -339,9 +339,22 @@ export default function DrOzanYetkinPage() {
 
           {/* Yayınlar */}
           <div className="bg-white border border-border rounded-lg p-6 shadow-sm">
-            <SectionToggle sectionKey="publications" title={t("publications")} icon={FileText} />
+            <SectionToggle sectionKey="publications" title={`${t("publications")} (${publications.length})`} icon={FileText} />
             {openSections.has("publications") && (
               <div className="space-y-5">
+                {/* Özet */}
+                <div className="flex flex-wrap gap-3 pb-3 border-b border-border">
+                  {pubTypes.map(({ key, label }) => {
+                    const count = publications.filter((p) => p.type === key).length;
+                    if (count === 0) return null;
+                    return (
+                      <span key={key} className="px-2.5 py-1 bg-primary/10 text-primary rounded-full text-xs font-medium">
+                        {label}: {count}
+                      </span>
+                    );
+                  })}
+                </div>
+
                 {pubTypes.map(({ key, label, icon: PubIcon }) => {
                   const items = publications
                     .filter((p) => p.type === key)
@@ -351,7 +364,7 @@ export default function DrOzanYetkinPage() {
                     <div key={key}>
                       <h4 className="text-sm font-bold text-gray-500 mb-2 flex items-center gap-1.5 uppercase">
                         <PubIcon size={14} />
-                        {label}
+                        {label} ({items.length})
                       </h4>
                       <ul className="space-y-2">
                         {items.map((pub, i) => (
