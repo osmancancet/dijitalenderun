@@ -13,15 +13,17 @@ export default function BiyografiDetailPage() {
   const { slug } = useParams<{ slug: string }>();
   const [item, setItem] = useState<Biyografi | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
+    setLoading(true); setError(false);
     fetch("/api/public/biyografiler")
       .then((r) => r.json())
       .then((d) => {
         const found = (d.items as Biyografi[])?.find((b) => b.slug === slug);
         setItem(found ?? null);
       })
-      .catch(() => {})
+      .catch(() => setError(true))
       .finally(() => setLoading(false));
   }, [slug]);
 

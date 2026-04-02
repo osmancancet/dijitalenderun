@@ -15,15 +15,17 @@ export default function MevzuatDersNotuDetailPage() {
   const [note, setNote] = useState<DersNotu | null>(null);
   const [relatedNotes, setRelatedNotes] = useState<DersNotu[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
+    setLoading(true); setError(false);
     fetch(`/api/public/ders-notlari/${id}?type=mevzuat`)
       .then((res) => res.json())
       .then((d) => {
         setNote(d.note ?? null);
         setRelatedNotes(d.relatedNotes ?? []);
       })
-      .catch(() => {})
+      .catch(() => setError(true))
       .finally(() => setLoading(false));
   }, [id]);
 

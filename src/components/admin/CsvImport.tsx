@@ -2,6 +2,7 @@
 
 import { useState, useRef } from "react";
 import { Upload, X, FileSpreadsheet, AlertCircle, CheckCircle2 } from "lucide-react";
+import { getSupabaseClient } from "@/lib/supabase";
 
 interface CsvField {
   key: string;
@@ -182,9 +183,11 @@ export default function CsvImport({ collection, fields, onComplete }: CsvImportP
 
     try {
       const items = buildItems();
+      const supabase = getSupabaseClient();
+      const { data: { session } } = await supabase.auth.getSession();
       const res = await fetch("/api/admin/bulk-import", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...(session?.access_token ? { Authorization: `Bearer ${session.access_token}` } : {}) },
         body: JSON.stringify({ collection, items }),
       });
 

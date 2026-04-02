@@ -17,7 +17,7 @@ export default function AdminResmiGazetePage() {
     setSyncing(true);
     setSyncMsg("");
     try {
-      const res = await fetch("/api/resmi-gazete");
+      const res = await fetch("/api/public/resmi-gazete");
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
 

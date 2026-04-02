@@ -6,6 +6,7 @@ import ImageUpload from "@/components/admin/ImageUpload";
 import LoadingSpinner from "@/components/shared/LoadingSpinner";
 import SortableList from "@/components/admin/SortableList";
 import { Plus, Pencil, Trash2, X, ArrowUpDown } from "lucide-react";
+import { getSupabaseClient } from "@/lib/supabase";
 import type { SliderItem } from "@/types";
 
 const COLLECTION = "slider";
@@ -22,9 +23,11 @@ export default function AdminSliderPage() {
   async function handleReorder(orderedIds: string[]) {
     setReordering(true);
     try {
+      const supabase = getSupabaseClient();
+      const { data: { session } } = await supabase.auth.getSession();
       const res = await fetch("/api/admin/reorder", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...(session?.access_token ? { Authorization: `Bearer ${session.access_token}` } : {}) },
         body: JSON.stringify({ collection: COLLECTION, orderedIds }),
       });
       if (!res.ok) throw new Error("Sıralama güncellenemedi");
