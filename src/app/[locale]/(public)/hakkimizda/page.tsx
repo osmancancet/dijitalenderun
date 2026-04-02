@@ -6,7 +6,7 @@ import PageTitle from "@/components/shared/PageTitle";
 import LoadingSpinner from "@/components/shared/LoadingSpinner";
 import Image from "next/image";
 import { Target, Users, BookOpen, Globe, GraduationCap, Lightbulb, MessageSquare } from "lucide-react";
-import { stripHtml } from "@/lib/stripHtml";
+import RichTextRenderer from "@/components/shared/RichTextRenderer";
 import type { HakkimizdaContent } from "@/types";
 
 export default function HakkimizdaPage() {
@@ -45,8 +45,8 @@ export default function HakkimizdaPage() {
             </div>
           )}
           <div className="p-8">
-            <div className="prose max-w-none text-gray-600 leading-relaxed text-lg whitespace-pre-wrap">
-              {stripHtml(customContent!.content)}
+            <div className="text-gray-600 leading-relaxed text-lg">
+              <RichTextRenderer content={customContent!.content} />
             </div>
           </div>
         </div>

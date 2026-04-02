@@ -7,7 +7,7 @@ import LoadingSpinner from "@/components/shared/LoadingSpinner";
 import Image from "next/image";
 import {
   GraduationCap, Briefcase, BookOpen, Award, Globe, Mail, Phone,
-  Building, BookMarked, FileText, PenTool, Users, Trophy, ChevronDown, ChevronUp
+  Building, BookMarked, FileText, PenTool, Users, Trophy, ChevronDown, ChevronUp, ExternalLink
 } from "lucide-react";
 import type { ProfileContent } from "@/types";
 
@@ -359,7 +359,12 @@ export default function DrOzanYetkinPage() {
                             <span className="w-5 h-5 bg-primary text-white rounded-full flex items-center justify-center text-[10px] shrink-0 mt-0.5 font-bold">
                               {i + 1}
                             </span>
-                            <span className="leading-relaxed">{pub.text}</span>
+                            <span className="leading-relaxed flex-1">{pub.text}</span>
+                            {pub.url && (
+                              <a href={pub.url} target="_blank" rel="noopener noreferrer" className="shrink-0 mt-0.5 w-7 h-7 bg-primary/10 hover:bg-primary hover:text-white text-primary rounded-full flex items-center justify-center transition-colors" title="Makaleyi Görüntüle">
+                                <ExternalLink size={14} />
+                              </a>
+                            )}
                           </li>
                         ))}
                       </ul>

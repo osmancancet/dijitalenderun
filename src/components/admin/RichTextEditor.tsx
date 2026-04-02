@@ -68,9 +68,34 @@ export default function RichTextEditor({ content, onChange, placeholder }: RichT
   }
 
   function addImage() {
-    const url = prompt("Görsel URL'si girin:");
-    if (!url) return;
-    editor!.chain().focus().setImage({ src: url }).run();
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/*";
+    input.onchange = async () => {
+      const file = input.files?.[0];
+      if (!file) return;
+      try {
+        const { getSupabaseClient } = await import("@/lib/supabase");
+        const supabase = getSupabaseClient();
+        const { data: { session } } = await supabase.auth.getSession();
+
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("folder", "editor-images");
+        const res = await fetch("/api/admin/upload", {
+          method: "POST",
+          body: formData,
+          headers: session?.access_token ? { Authorization: `Bearer ${session.access_token}` } : {},
+        });
+        if (!res.ok) throw new Error("Yükleme başarısız");
+        const data = await res.json();
+        editor!.chain().focus().setImage({ src: data.url }).run();
+      } catch {
+        const url = prompt("Yükleme başarısız. Görsel URL'si girin:");
+        if (url) editor!.chain().focus().setImage({ src: url }).run();
+      }
+    };
+    input.click();
   }
 
   function addTable() {

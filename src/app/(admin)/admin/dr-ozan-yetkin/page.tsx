@@ -11,7 +11,7 @@ type SectionKey = "personal" | "education" | "academic" | "work" | "languages" |
 
 const emptyEducation: ProfileEducation = { years: "", department: "", university: "", degree: "" };
 const emptyPosition: ProfilePosition = { years: "", title: "", institution: "", detail: "" };
-const emptyPublication: ProfilePublication = { type: "makale", text: "", year: new Date().getFullYear() };
+const emptyPublication: ProfilePublication = { type: "makale", text: "", year: new Date().getFullYear(), url: "" };
 const emptyCourse: ProfileCourse = { level: "Ön Lisans", semester: "Güz Dönemi", name: "" };
 
 export default function AdminDrOzanYetkinPage() {
@@ -367,6 +367,7 @@ export default function AdminDrOzanYetkinPage() {
                     </select>
                     <input type="number" value={pub.year || ""} onChange={(e) => { const u = [...form.publications]; u[i] = { ...pub, year: e.target.value ? Number(e.target.value) : undefined }; setForm({ ...form, publications: u }); }} className={inputCls} placeholder="Yıl" min={1900} max={2100} />
                     <input type="text" value={pub.text} onChange={(e) => { const u = [...form.publications]; u[i] = { ...pub, text: e.target.value }; setForm({ ...form, publications: u }); }} className={inputCls} placeholder="Yayın künyesi" />
+                    <input type="url" value={pub.url || ""} onChange={(e) => { const u = [...form.publications]; u[i] = { ...pub, url: e.target.value }; setForm({ ...form, publications: u }); }} className={`${inputCls} md:col-span-3`} placeholder="Makale bağlantısı (opsiyonel) — https://..." />
                   </div>
                   <button type="button" onClick={() => { const u = form.publications.filter((_, j) => j !== i); setForm({ ...form, publications: u.length ? u : [emptyPublication] }); }} className="text-red-500 hover:text-red-700 mt-2"><X size={16} /></button>
                 </div>

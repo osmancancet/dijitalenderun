@@ -123,6 +123,7 @@ export interface ProfilePublication {
   type: "kitap" | "makale" | "bildiri" | "editorluk";
   text: string;
   year?: number;
+  url?: string;
 }
 
 export interface ProfileCourse {

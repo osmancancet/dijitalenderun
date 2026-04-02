@@ -5,7 +5,7 @@ import { ArrowLeft } from "lucide-react";
 import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import LoadingSpinner from "@/components/shared/LoadingSpinner";
-import { stripHtml } from "@/lib/stripHtml";
+import RichTextRenderer from "@/components/shared/RichTextRenderer";
 import type { Biyografi } from "@/types";
 import { useParams } from "next/navigation";
 
@@ -52,8 +52,8 @@ export default function BiyografiDetailPage() {
           <div className="p-6 flex-1">
             <h1 className="text-2xl font-bold text-foreground mb-1">{item.name}</h1>
             {item.title && <p className="text-sm text-gray-500 mb-4">{item.title}</p>}
-            <div className="text-gray-600 leading-relaxed whitespace-pre-wrap">
-              {stripHtml(item.bio)}
+            <div className="text-gray-600 leading-relaxed">
+              <RichTextRenderer content={item.bio} />
             </div>
           </div>
         </div>

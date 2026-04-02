@@ -6,7 +6,7 @@ import { Link } from "@/i18n/navigation";
 import PageTitle from "@/components/shared/PageTitle";
 import LoadingSpinner from "@/components/shared/LoadingSpinner";
 import { ArrowLeft, Download, BookOpen, FileText } from "lucide-react";
-import { stripHtml } from "@/lib/stripHtml";
+import RichTextRenderer from "@/components/shared/RichTextRenderer";
 import RelatedNotes from "@/components/content/RelatedNotes";
 import type { DersNotu } from "@/types";
 
@@ -80,8 +80,8 @@ export default function MevzuatDersNotuDetailPage() {
             <BookOpen size={18} className="text-primary" />
             <span className="text-sm font-semibold text-gray-500 uppercase tracking-wider">İçerik</span>
           </div>
-          <div className="prose max-w-none text-gray-700 leading-relaxed whitespace-pre-wrap text-[15px]">
-            {stripHtml(note.content)}
+          <div className="text-gray-700 leading-relaxed text-[15px]">
+            <RichTextRenderer content={note.content} />
           </div>
         </div>
       )}
