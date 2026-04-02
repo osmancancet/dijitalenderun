@@ -25,7 +25,11 @@ function AdminContent({ children }: { children: React.ReactNode }) {
   }
 
   if (!user) {
-    return <>{children}</>;
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <LoadingSpinner />
+      </div>
+    );
   }
 
   return (

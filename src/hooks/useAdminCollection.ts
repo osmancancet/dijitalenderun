@@ -15,10 +15,12 @@ async function getAuthHeaders(): Promise<HeadersInit> {
 export function useAdminCollection<T>(collectionName: string) {
   const [items, setItems] = useState<(T & { id: string })[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const refresh = useCallback(async () => {
     try {
       setLoading(true);
+      setError(null);
       const headers = await getAuthHeaders();
       const res = await fetch(`/api/admin/${collectionName}`, { headers });
       if (!res.ok) throw new Error(`API ${res.status}`);
@@ -26,6 +28,7 @@ export function useAdminCollection<T>(collectionName: string) {
       setItems(data.items ?? []);
     } catch (err) {
       console.error(`[useAdminCollection] ${collectionName} fetch error:`, err);
+      setError("Veriler yüklenemedi");
     } finally {
       setLoading(false);
     }
@@ -35,7 +38,7 @@ export function useAdminCollection<T>(collectionName: string) {
     refresh();
   }, [refresh]);
 
-  return { items, loading, refresh };
+  return { items, loading, error, refresh };
 }
 
 export async function adminAdd(collection: string, data: Record<string, unknown>): Promise<string> {

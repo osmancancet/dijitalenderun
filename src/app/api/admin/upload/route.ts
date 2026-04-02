@@ -22,6 +22,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "File and folder required" }, { status: 400 });
     }
 
+    if (file.size > 10 * 1024 * 1024) {
+      return NextResponse.json({ error: "Dosya 10MB'dan büyük olamaz" }, { status: 400 });
+    }
+
+    const allowedTypes = ["image/jpeg", "image/png", "image/gif", "image/webp", "image/svg+xml", "application/pdf"];
+    if (!file.type.startsWith("image/") && !allowedTypes.includes(file.type)) {
+      return NextResponse.json({ error: "Desteklenmeyen dosya türü" }, { status: 400 });
+    }
+
     const supabase = getSupabase();
 
     const timestamp = Date.now();

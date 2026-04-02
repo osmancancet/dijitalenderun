@@ -10,6 +10,10 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Tüm alanlar zorunludur." }, { status: 400 });
     }
 
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return NextResponse.json({ error: "Geçerli bir e-posta adresi girin." }, { status: 400 });
+    }
+
     const supabase = getSupabaseAdmin();
     const { error } = await supabase
       .from("contact_messages")
