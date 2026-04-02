@@ -24,10 +24,8 @@ const PAGE_OPTIONS = [
 ];
 
 const POS_OPTIONS = [
-  { value: "left", label: "Sol Kenar", desc: "Dikey banner, sayfanın sol tarafı", icon: "◀", size: "140×500px" },
-  { value: "right", label: "Sağ Kenar", desc: "Dikey banner, sayfanın sağ tarafı", icon: "▶", size: "140×500px" },
-  { value: "both", label: "Sol + Sağ", desc: "Her iki kenarda da gösterilir", icon: "◀▶", size: "140×500px" },
-  { value: "horizontal", label: "Yatay Banner", desc: "Ana sayfada slider altında tam genişlik", icon: "▬", size: "1200×160px" },
+  { value: "both", label: "Sayfa İçi Banner", desc: "Header altında sayfa içi yatay reklam (tüm alt sayfalar)", icon: "▬", size: "1200×100px" },
+  { value: "horizontal", label: "Ana Sayfa Banner", desc: "Ana sayfada slider altında tam genişlik", icon: "▬", size: "1200×160px" },
 ] as const;
 
 type FormData = {
@@ -161,7 +159,7 @@ export default function AdminReklamlarPage() {
         <div>
           <h1 className="text-2xl font-bold text-foreground">Reklam Yönetimi</h1>
           <p className="text-sm text-gray-500 mt-1">
-            Sayfa bazlı reklam alanlarını yönetin. Her reklam belirli sayfalara atanabilir ve tarih aralığı belirlenebilir.
+            Reklam alanlarını yönetin. Sayfa içi banner (1200×100px) alt sayfalarda başlığın altında, ana sayfa banner (1200×160px) slider altında görünür. Dr. Ozan Yetkin sayfasında reklam gösterilmez.
           </p>
         </div>
         <button onClick={openNew} className="flex items-center gap-2 px-4 py-2.5 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary-light transition-colors shadow-sm">
