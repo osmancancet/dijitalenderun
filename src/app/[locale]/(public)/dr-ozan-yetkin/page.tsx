@@ -125,7 +125,7 @@ export default function DrOzanYetkinPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
-      <PageTitle title={title} subtitle={t("subtitle")} />
+      <PageTitle title={title} subtitle={t("subtitle")} hideAd />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* ===== SOL: Profil Kartı ===== */}
