@@ -1,10 +1,14 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabase";
+import { verifyAdmin } from "@/lib/adminAuth";
 
 export async function GET(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: { params: Promise<{ docId: string }> }
 ) {
+  const auth = await verifyAdmin(request);
+  if (auth.error) return auth.error;
+
   try {
     const { docId } = await params;
     const supabase = getSupabaseAdmin();
@@ -28,6 +32,9 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ docId: string }> }
 ) {
+  const auth = await verifyAdmin(request);
+  if (auth.error) return auth.error;
+
   try {
     const { docId } = await params;
     const body = await request.json();

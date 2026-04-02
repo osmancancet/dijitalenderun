@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { getSupabaseAdmin, toTableName } from "@/lib/supabase";
+import { verifyAdmin } from "@/lib/adminAuth";
 
 const ALLOWED_COLLECTIONS = [
   "slider",
@@ -14,6 +15,9 @@ const ALLOWED_COLLECTIONS = [
 ];
 
 export async function POST(request: NextRequest) {
+  const auth = await verifyAdmin(request);
+  if (auth.error) return auth.error;
+
   try {
     const { collection, orderedIds } = await request.json();
 

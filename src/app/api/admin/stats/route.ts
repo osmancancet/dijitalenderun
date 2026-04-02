@@ -1,5 +1,6 @@
-import { NextResponse } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabase";
+import { verifyAdmin } from "@/lib/adminAuth";
 
 const TABLES = {
   slider: "slider",
@@ -14,7 +15,10 @@ const TABLES = {
   contactMessages: "contact_messages",
 } as const;
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  const auth = await verifyAdmin(request);
+  if (auth.error) return auth.error;
+
   try {
     const supabase = getSupabaseAdmin();
 

@@ -1,10 +1,14 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { getSupabaseAdmin, toTableName, toSnakeCase, toCamelCase } from "@/lib/supabase";
+import { verifyAdmin } from "@/lib/adminAuth";
 
 export async function GET(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: { params: Promise<{ collection: string }> }
 ) {
+  const auth = await verifyAdmin(request);
+  if (auth.error) return auth.error;
+
   try {
     const { collection } = await params;
     const table = toTableName(collection);
@@ -29,6 +33,9 @@ export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ collection: string }> }
 ) {
+  const auth = await verifyAdmin(request);
+  if (auth.error) return auth.error;
+
   try {
     const { collection } = await params;
     const table = toTableName(collection);
@@ -36,7 +43,6 @@ export async function POST(
     const supabase = getSupabaseAdmin();
 
     const snakeData = toSnakeCase(body);
-    // Remove id if present (let DB generate it)
     delete snakeData.id;
 
     const { data, error } = await supabase

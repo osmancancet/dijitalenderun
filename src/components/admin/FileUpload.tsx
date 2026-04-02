@@ -11,10 +11,18 @@ interface FileUploadProps {
 }
 
 async function uploadViaApi(file: File, folder: string): Promise<string> {
+  const { getSupabaseClient } = await import("@/lib/supabase");
+  const supabase = getSupabaseClient();
+  const { data: { session } } = await supabase.auth.getSession();
+
   const formData = new FormData();
   formData.append("file", file);
   formData.append("folder", folder);
-  const res = await fetch("/api/admin/upload", { method: "POST", body: formData });
+  const res = await fetch("/api/admin/upload", {
+    method: "POST",
+    body: formData,
+    headers: session?.access_token ? { Authorization: `Bearer ${session.access_token}` } : {},
+  });
   if (!res.ok) throw new Error("Upload failed");
   const data = await res.json();
   return data.url;
