@@ -11,7 +11,7 @@ import Placeholder from "@tiptap/extension-placeholder";
 import {
   Bold, Italic, Underline as UnderlineIcon, Strikethrough,
   Link2, Unlink, Image as ImageIcon, List, ListOrdered,
-  AlignLeft, AlignCenter, AlignRight, Table as TableIcon,
+  AlignLeft, AlignCenter, AlignRight, AlignJustify, Table as TableIcon,
   Heading1, Heading2, Heading3, Undo, Redo, Quote, Minus,
 } from "lucide-react";
 
@@ -49,7 +49,7 @@ export default function RichTextEditor({ content, onChange, placeholder }: RichT
       TableRow,
       TableCell,
       TableHeader,
-      TextAlign.configure({ types: ["heading", "paragraph"] }),
+      TextAlign.configure({ types: ["heading", "paragraph"], defaultAlignment: "justify" }),
       Placeholder.configure({ placeholder: placeholder || "İçerik yazın..." }),
     ],
     content,
@@ -130,6 +130,7 @@ export default function RichTextEditor({ content, onChange, placeholder }: RichT
         <ToolbarButton onClick={() => editor.chain().focus().setTextAlign("left").run()} active={editor.isActive({ textAlign: "left" })} title="Sola hizala"><AlignLeft size={s} /></ToolbarButton>
         <ToolbarButton onClick={() => editor.chain().focus().setTextAlign("center").run()} active={editor.isActive({ textAlign: "center" })} title="Ortala"><AlignCenter size={s} /></ToolbarButton>
         <ToolbarButton onClick={() => editor.chain().focus().setTextAlign("right").run()} active={editor.isActive({ textAlign: "right" })} title="Sağa hizala"><AlignRight size={s} /></ToolbarButton>
+        <ToolbarButton onClick={() => editor.chain().focus().setTextAlign("justify").run()} active={editor.isActive({ textAlign: "justify" })} title="İki yana yasla"><AlignJustify size={s} /></ToolbarButton>
         <div className="w-px bg-border mx-1" />
 
         {/* Lists */}
